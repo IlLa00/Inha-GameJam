@@ -6,4 +6,4 @@
 # Notion    
 - https://www.notion.so/214894b38b1080d98594f46164d4c9d5?source=copy_link
 - 개발일지? 같은 개념으로 작성 중입니다
-- https://www.notion.so/2149179f2f4e80ad80fcc6c13498ecf0
+- https://www.notion.so/2149179f2f4e80ad80fcc6c13498ecf0?source=copy_link
