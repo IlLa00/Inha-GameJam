@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 8466385769022245504}
   - component: {fileID: 4839003733256066722}
   - component: {fileID: 3963057699431019950}
+  - component: {fileID: 2646602747780756754}
+  - component: {fileID: -1143650457932239634}
+  - component: {fileID: -2025170439985477903}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -98,3 +101,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionRange: 3
+  Player: {fileID: 0}
+--- !u!114 &2646602747780756754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6103034675437256170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eddd472c2c2be248b7dbea0584bda85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generator: {fileID: 0}
+  InteractiveUI: {fileID: 0}
+--- !u!114 &-1143650457932239634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6103034675437256170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c3ae9358cc3f24d86223655b26da56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSlider: {fileID: 0}
+  successZone: {fileID: 0}
+  generator: {fileID: 0}
+  sliderSpeed: 1
+--- !u!114 &-2025170439985477903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6103034675437256170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a9086375a4f5d1429f08c381a2c4cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSlider: {fileID: 0}
+  generator: {fileID: 0}

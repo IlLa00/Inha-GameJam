@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GeneratorUICenter : MonoBehaviour
+public class GeneratorGameUI : MonoBehaviour
 {
     [SerializeField] private Slider gameSlider;
     [SerializeField] private RectTransform successZone;
@@ -12,7 +12,6 @@ public class GeneratorUICenter : MonoBehaviour
     private float SuccessZoneMin;
     private float SuccessZoneMax;
 
-    private bool isGameActive = false;
     private bool isMovingRight = true;
 
     void Start()
@@ -48,12 +47,14 @@ public class GeneratorUICenter : MonoBehaviour
 
         zoneImage.color = Color.red;
 
-        gameObject.SetActive(false);
+        gameSlider.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (!isGameActive) return;
+        if (!generator.IsPlayGame()) return;
+
+        gameSlider.gameObject.SetActive(true);
 
         float CurrentValue = gameSlider.value;
 
@@ -81,7 +82,6 @@ public class GeneratorUICenter : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            isGameActive = false;
             float finalValue = gameSlider.value;
 
             // 성공 구역 내에 있는지 확인
@@ -93,6 +93,9 @@ public class GeneratorUICenter : MonoBehaviour
                 generator.SuccessMiniGame();
             else
                 generator.FailMiniGame();
+
+
+            gameSlider.gameObject.SetActive(false);
         }
     }
 
@@ -100,4 +103,5 @@ public class GeneratorUICenter : MonoBehaviour
     {
         return value >= SuccessZoneMin && value <= SuccessZoneMax;
     }
+       
 }

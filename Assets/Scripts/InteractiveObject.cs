@@ -2,28 +2,31 @@
 
 public class InteractiveObject : MonoBehaviour
 {
-    [SerializeField] protected float interactionRange = 3f;
-    // [SerializeField] protected Player player;
+    [SerializeField] protected float interactionRange = 0.6f;
+    [SerializeField] protected PlayerController Player;
 
-    protected bool CanInteract; 
+    protected bool CanInteracting;
+    protected float distance;
+
+    public bool CanInteract() { return CanInteracting; }
 
     void Start()
     {
+
+    }
+
+    protected virtual void Update()
+    {
+        distance = Vector3.Distance(Player.transform.position, transform.position);
+
+        if (distance < interactionRange)
+            CanInteracting = true;
+        else
+            CanInteracting = false;
         
     }
 
-    void Update()
-    {
-        //float distance = Vector3.Distance(transform.position, player.position);
-        //if (distance < interactionRange)
-        //    CanInteract = true;
-        //else
-        //    CanInteract = false;
-
-
-    }
-
-    protected virtual void OnInteractive() {}
+    protected virtual void OnInteractive() { }
     protected virtual void OffInteractive() { }
 
 }
