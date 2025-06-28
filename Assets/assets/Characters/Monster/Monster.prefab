@@ -196,8 +196,7 @@ MonoBehaviour:
   HP: 10
   Speed: 0
   Atk: 0
-  animator: {fileID: 0}
-  GroundCheck: {fileID: 0}
+  GroundCheck: {fileID: 6026715785121612065}
   GroundLayer:
     serializedVersion: 2
     m_Bits: 256

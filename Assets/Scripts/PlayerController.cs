@@ -35,7 +35,6 @@ public class PlayerController : BaseCharater
 
         this.HP = 10;
         this.Atk = 30;
-        CurrentNoiseLevel = NoiseLevel;
         UpdateHP?.Invoke(this.HP);
     }
 
