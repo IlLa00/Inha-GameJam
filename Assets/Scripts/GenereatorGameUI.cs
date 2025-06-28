@@ -24,29 +24,6 @@ public class GeneratorGameUI : MonoBehaviour
         gameSlider.value = 0f;
         gameSlider.interactable = false;
 
-        SuccessZoneMin = generator.GetMinRange();
-        SuccessZoneMax = generator.GetMaxRange();
-
-        RectTransform sliderRect = gameSlider.GetComponent<RectTransform>();
-        successZone.SetParent(sliderRect, false);
-
-        // 성공 구역 위치 및 크기 계산
-        float zoneWidth = (SuccessZoneMax - SuccessZoneMin) * sliderRect.rect.width;
-        float zoneStartX = SuccessZoneMin * sliderRect.rect.width - sliderRect.rect.width * 0.5f;
-
-        // 성공 구역 설정
-        successZone.anchorMin = new Vector2(0, 0);
-        successZone.anchorMax = new Vector2(0, 1);
-        successZone.sizeDelta = new Vector2(zoneWidth, 0);
-        successZone.anchoredPosition = new Vector2(zoneStartX + zoneWidth * 0.5f, 0);
-
-        // 빨간색으로 설정
-        Image zoneImage = successZone.GetComponent<Image>();
-        if (zoneImage == null)
-            zoneImage = successZone.gameObject.AddComponent<Image>();
-
-        zoneImage.color = Color.red;
-
         gameSlider.gameObject.SetActive(false);
     }
 
@@ -55,6 +32,11 @@ public class GeneratorGameUI : MonoBehaviour
         if (!generator.IsPlayGame()) return;
 
         gameSlider.gameObject.SetActive(true);
+
+        SetSuccessZone();
+
+        // Debug.Log(SuccessZoneMax);
+        // Debug.Log(SuccessZoneMin);
 
         float CurrentValue = gameSlider.value;
 
@@ -80,7 +62,7 @@ public class GeneratorGameUI : MonoBehaviour
         gameSlider.value = CurrentValue;
 
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             float finalValue = gameSlider.value;
 
@@ -90,11 +72,20 @@ public class GeneratorGameUI : MonoBehaviour
             Debug.Log($"Slider stopped at: {finalValue:F3}, Success: {success}");
 
             if (success)
+            {
+                Debug.Log("Success");
                 generator.SuccessMiniGame();
+            }
             else
                 generator.FailMiniGame();
 
 
+            gameSlider.gameObject.SetActive(false);
+        }
+
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) // 이동키 입력 시, 탈출
+        {
+            isMovingRight = false;
             gameSlider.gameObject.SetActive(false);
         }
     }
@@ -103,5 +94,32 @@ public class GeneratorGameUI : MonoBehaviour
     {
         return value >= SuccessZoneMin && value <= SuccessZoneMax;
     }
-       
+
+    private void SetSuccessZone()
+    {
+        SuccessZoneMin = generator.GetMinRange();
+        SuccessZoneMax = generator.GetMaxRange();
+
+        Slider slider = gameSlider.GetComponent<Slider>();
+        RectTransform fillAreaRect = slider.fillRect.parent.GetComponent<RectTransform>();
+
+        successZone.SetParent(fillAreaRect, false);
+
+        float normalizedMin = Mathf.Clamp01(SuccessZoneMin);
+        float normalizedMax = Mathf.Clamp01(SuccessZoneMax);
+
+        float zoneWidth = (normalizedMax - normalizedMin);
+        float zoneStartX = normalizedMin;
+
+        successZone.anchorMin = new Vector2(zoneStartX, 0);
+        successZone.anchorMax = new Vector2(normalizedMax, 1);
+        successZone.sizeDelta = Vector2.zero;
+        successZone.anchoredPosition = Vector2.zero;
+
+        Image zoneImage = successZone.GetComponent<Image>();
+        if (zoneImage == null)
+            zoneImage = successZone.gameObject.AddComponent<Image>();
+        zoneImage.color = Color.red;
+    }
+
 }

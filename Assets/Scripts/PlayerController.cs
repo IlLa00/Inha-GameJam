@@ -1,8 +1,9 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 using static UnityEngine.UI.Image;
 
 public class PlayerController : BaseCharater
@@ -25,7 +26,7 @@ public class PlayerController : BaseCharater
     Rigidbody2D Rigid2D;
 
     public event Action<int> UpdateHP;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +38,7 @@ public class PlayerController : BaseCharater
         CurrentNoiseLevel = NoiseLevel;
         UpdateHP?.Invoke(this.HP);
     }
-    
+
     public float GetNoiseLevel()
     {
         return NoiseLevel;
@@ -47,13 +48,33 @@ public class PlayerController : BaseCharater
         return CurrentNoiseLevel;
     }
 
+    public void IncreaseCurrentNoiseLevel(float Value)
+    {
+        CurrentNoiseLevel += Value;
+
+        if(CurrentNoiseLevel >= NoiseLevel)
+        {
+            // ìµ¸ë¹„ìƒë©”ì„¸ì§€ë¥¼ ì„¼í„°í•œí…Œë³´ë‚´ê³  ì„¼í„°ëŠ” ì´ê±¸ ë°›ì•„ì„œ ì‚´ì¸ë§ˆí•œí…Œ ì•¼ ì €ìƒˆê¸° ì €ê¹ƒë‹¤ ê°€ë¼ <- ê°ì²´ì§€í–¥ì 
+            // ì‚´ì¸ë§ˆëŠ” ê·¸ëŸ¼ í”Œë ˆì´ì–´ë¥¼ ì•ˆë‹¤ <- ê°ì²´ì§€í–¥ì— ìœ„ë°°ê°€ ì•½ê°„ ë ìˆ˜ë„ìˆìŒ
+            // ì„¼í„°í•œí…Œ í•¨ìˆ˜ë¥¼ ë³´ë‚´ëŠ”ë° ì´ í•¨ìˆ˜ì—ëŠ” í”Œë ˆì´ì–´ ìœ„ì¹˜ë¥¼ ë³´ë‚´ìš” ì„¼í„°ëŠ” ê·¸ê±¸ë“£ê³  ì‚´ì¸ë§ˆí•œí…Œ ë°›ì€ í”Œë ˆì´ì–´ìœ„ì¹˜ë¥¼ ë³´ë‚¸ë‹¤
+            // ë‚˜ëŠ” ì‘ êµ¬í˜„ë§Œí• êº¼ì•¼
+            
+        }
+    }
+
+    public void DecreaseCurrentNoiseLevel(float Value)
+    {
+        CurrentNoiseLevel -= Value;
+        CurrentNoiseLevel = Mathf.Clamp01(0f);
+    }
+
     public override void ChangeState(State newState)
     {
         if (CurrentState == newState)
             return;
 
         CurrentState = newState;
-        // ÇÏÀ§ Å¬·¡½º¿¡¼­ override °¡´É
+        // í•˜ìœ„ í´ë˜ìŠ¤ì—ì„œ override ê°€ëŠ¥
 
         switch (newState)
         {
@@ -90,69 +111,67 @@ public class PlayerController : BaseCharater
         if (Input.GetKey(KeyCode.RightArrow)) { key = 1; }
         if (Input.GetKey(KeyCode.LeftArrow)) { key = -1; }
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift); //´Ş¸®´ÂÁö È®ÀÎ ÈÄ ÇöÀç force¸¦ °è»êÇÔ
+        bool isRunning = Input.GetKey(KeyCode.LeftShift); //ë‹¬ë¦¬ëŠ”ì§€ í™•ì¸ í›„ í˜„ì¬ forceë¥¼ ê³„ì‚°í•¨
         float currentForce = isRunning ? RunForce : WalkForce;
         float currentMaxSpeed = isRunning ? RunMaxSpeed : MaxSpeed;
 
-        this.Rigid2D.AddForce(transform.right * key * currentForce); // ÁÂ¿ì ¿òÁ÷ÀÓ
+        this.Rigid2D.AddForce(transform.right * key * currentForce); // ì¢Œìš° ì›€ì§ì„
         float velX = Mathf.Abs(this.Rigid2D.velocity.x);
 
-        if (velX > currentMaxSpeed) // ¼ÓµµÁ¦ÇÑ
+        if (velX > currentMaxSpeed) // ì†ë„ì œí•œ
         {
             this.Rigid2D.velocity = new Vector2(Mathf.Sign(this.Rigid2D.velocity.x) * currentMaxSpeed, this.Rigid2D.velocity.y);
         }
 
-        if (key != 0) // ¹æÇâÀüÈ¯
+        if (key != 0) // ë°©í–¥ì „í™˜
         {
             float currnetX = Mathf.Abs(transform.localScale.x);
             transform.localScale = new Vector3(currnetX * key, transform.localScale.y, transform.localScale.z);
         }
 
-        // speed¿¡ µû¶ó ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¹Ù²ñ
+        // speedì— ë”°ë¼ ì• ë‹ˆë©”ì´ì…˜ì´ ë°”ë€œ
         float normalizedSpeed = velX / RunMaxSpeed;
         base.animator.SetFloat("Speed", normalizedSpeed);
     }
-   
+
     void FixedUpdate()
     {
         bool grounded = IsGrounded();
-        animator.SetBool("IsJumping", !grounded);  // ¶¥¿¡ ÀÖÀ¸¸é false, °øÁßÀÌ¸é true
+        animator.SetBool("IsJumping", !grounded);  // ë•…ì— ìˆìœ¼ë©´ false, ê³µì¤‘ì´ë©´ true
     }
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //Á¡ÇÁ
+        if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //ì í”„
         {
             this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
             ChangeState(State.Jump);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            //ÇÃ·§Æ÷¸Ó ³»·Á¿À±â?
+            //í”Œë«í¬ë¨¸ ë‚´ë ¤ì˜¤ê¸°?
             ChangeState(State.Jump);
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-            // »óÈ£ÀÛ¿ë Å°
-
             Vector2 origin = Rigid2D.position + new Vector2(10, 0);
 
-            // F¸¦ ´©¸£¸é ·¹ÀÌ¸¦½÷¼­ »óÈ£ÀÛ¿ë ¿ÀºêÁ§Æ®°¡ ÀÖÀ¸¸é -> ·¹ÀÌ
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 0.75f, LayerMask.GetMask("Interactive_object"));
-            Debug.DrawRay(origin, Vector2.right * 0.75f, Color.green);
-            
-            if(hit)
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
+            Debug.DrawRay(origin, Vector2.right * 3f, Color.green);
+
+            if (hit)
             {
                 GameObject hitObject = hit.collider.gameObject;
                 InteractiveObject ob = hit.collider.gameObject.GetComponent<InteractiveObject>();
-               
-                ob.OnInteractive();
+
+                if(ob.CanInteract())
+                    ob.OnInteractive();
             }
 
         }
     }
     bool IsGrounded()
     {
-        float rayOffsetY = -0.5f; // ÇÊ¿ä¿¡ µû¶ó Á¶Á¤
+        float rayOffsetY = -0.5f; // í•„ìš”ì— ë”°ë¼ ì¡°ì •
         Vector2 origin = Rigid2D.position + new Vector2(0, rayOffsetY);
         float rayLength = 0.2f;
 

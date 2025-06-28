@@ -25,9 +25,11 @@ public class GeneratorProgressUI : MonoBehaviour
 
     void Update()
     {
-        if (generator.IsRepair())
-        {
-            gameSlider.value = generator.GetCurrentProgress();
-        }
+        gameSlider.value = generator.GetCurrentProgress();
+
+        if (generator.CanInteract())
+            gameSlider.gameObject.SetActive(true);
+        else
+            gameSlider.gameObject.SetActive(false);
     }
 }

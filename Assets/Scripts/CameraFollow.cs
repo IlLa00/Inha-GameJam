@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Vector2 minPosition;     // 카메라 이동 최소값
     [SerializeField] private Vector2 maxPosition;     // 카메라 이동 최대값
 
-    void LateUpdate()
+    void Update()
     {
         if (player == null)
             return;
