@@ -5,6 +5,8 @@ using UnityEngine;
 public class Monster : BaseCharater
 {
     // Start is called before the first frame update
+
+    private Animator animator;
     void Start()
     {
         
