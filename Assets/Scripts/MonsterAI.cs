@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Monster : BaseCharater
+public class MonsterAI : BaseCharater
 {
     // Start is called before the first frame update
 
