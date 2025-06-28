@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 1296485834}
   - component: {fileID: 1296485833}
   - component: {fileID: 1296485832}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Killer
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -536,12 +536,48 @@ Transform:
   m_GameObject: {fileID: 1296485831}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.92, y: 0.93, z: 0.0714196}
+  m_LocalPosition: {x: -3, y: 4.35, z: 0.0714196}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1539721380 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+  m_PrefabInstance: {fileID: 573737045813689976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1539721385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+  m_PrefabInstance: {fileID: 573737045813689976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1539721386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539721380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a20b4584f336c5a4ea8989b5e71b1be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 10
+  Speed: 0
+  Atk: 0
+  animator: {fileID: 0}
+  GroundCheck: {fileID: 1539721385}
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  GroundCheckDistance: 1
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  FindRange: 4
+  RunSpeed: 2
 --- !u!1 &1852744458
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +592,7 @@ GameObject:
   - component: {fileID: 1852744460}
   - component: {fileID: 1852744459}
   - component: {fileID: 1852744464}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -707,7 +743,7 @@ Transform:
   m_GameObject: {fileID: 1852744458}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.15, z: 0}
+  m_LocalPosition: {x: -3.97, y: 1.15, z: 0}
   m_LocalScale: {x: 3.3, y: 3.3, z: 3.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -728,6 +764,7 @@ MonoBehaviour:
   HP: 0
   Speed: 0
   Atk: 0
+  animator: {fileID: 0}
   WalkForce: 10
   JumpForce: 10
   MaxSpeed: 2
@@ -746,6 +783,10 @@ PrefabInstance:
     - target: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_Name
       value: Monster
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_TagString
@@ -794,7 +835,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1539721386}
   m_SourcePrefab: {fileID: 100100000, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
