@@ -63,7 +63,7 @@ public class Generator : InteractiveObject
 
     }
 
-    protected override void OnInteractive()
+    public override void OnInteractive()
     {
         if (IsComplete) return; // 성공한거면 안함.
 

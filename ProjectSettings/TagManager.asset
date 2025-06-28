@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Interact
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Monster
   - Killer
   - Platform
-  - 
+  - Interactive_object
   - 
   - 
   - 

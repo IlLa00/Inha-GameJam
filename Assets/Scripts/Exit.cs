@@ -14,7 +14,7 @@ public class Exit : InteractiveObject
         
     }
 
-    protected override void OnInteractive()
+    public override void OnInteractive()
     {
         Debug.Log("Starting Exit OnInteractive");
         

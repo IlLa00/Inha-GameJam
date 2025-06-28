@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class PlayerController : BaseCharater
 {
@@ -24,7 +25,7 @@ public class PlayerController : BaseCharater
     Rigidbody2D Rigid2D;
 
     public event Action<int> UpdateHP;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -132,6 +133,20 @@ public class PlayerController : BaseCharater
         else if (Input.GetKeyDown(KeyCode.F))
         {
             // 상호작용 키
+
+            Vector2 origin = Rigid2D.position + new Vector2(10, 0);
+
+            // F를 누르면 레이를쏴서 상호작용 오브젝트가 있으면 -> 레이
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 0.75f, LayerMask.GetMask("Interactive_object"));
+            Debug.DrawRay(origin, Vector2.right * 0.75f, Color.green);
+            
+            if(hit)
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                InteractiveObject ob = hit.collider.gameObject.GetComponent<InteractiveObject>();
+               
+                ob.OnInteractive();
+            }
 
         }
     }

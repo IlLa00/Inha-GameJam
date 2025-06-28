@@ -557,6 +557,7 @@ MonoBehaviour:
   HP: 0
   Speed: 0
   Atk: 0
+  animator: {fileID: 0}
   WalkForce: 10
   JumpForce: 10
   MaxSpeed: 2
