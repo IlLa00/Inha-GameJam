@@ -17,7 +17,7 @@ public class Obstacle : InteractiveObject
         }
     }
 
-    protected override void OnInteractive()
+    public override void OnInteractive()
     {
         Debug.Log("Starting Obstacle OnInteractive");
 

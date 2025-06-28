@@ -7,12 +7,11 @@ public class InteractiveObject : MonoBehaviour
 
     protected bool CanInteracting;
     protected float distance;
-
+    
     public bool CanInteract() { return CanInteracting; }
 
     void Start()
     {
-
     }
 
     protected virtual void Update()
@@ -26,7 +25,7 @@ public class InteractiveObject : MonoBehaviour
         
     }
 
-    protected virtual void OnInteractive() { }
+    public virtual void OnInteractive() { }
     protected virtual void OffInteractive() { }
 
 }
