@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,11 +27,7 @@ public class MonsterAI : BaseCharater
 
     void Start()
     {
-        Rigid2D = GetComponent<Rigidbody2D>();
-
-        this.HP = 1;
-        this.Atk = 2;
-        this.Speed = 1f; // 기본 스피드
+        
     }
 
     // Update is called once per frame
