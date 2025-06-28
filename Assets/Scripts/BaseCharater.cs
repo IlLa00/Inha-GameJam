@@ -12,7 +12,7 @@ public class BaseCharater : MonoBehaviour
     [SerializeField]
     public int Atk;
 
-    public Animator animator;
+    protected Animator animator;
 
     public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked,};
     protected State CurrentState;

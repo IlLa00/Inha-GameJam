@@ -10,6 +10,7 @@ public class MonsterAI : BaseCharater
 
     public Transform GroundCheck;
     private Rigidbody2D Rigid2D;
+
     [SerializeField] LayerMask GroundLayer;
 
     public float GroundCheckDistance = 1f;
@@ -17,7 +18,7 @@ public class MonsterAI : BaseCharater
 
 
     [SerializeField] private LayerMask PlayerLayer;
-    [SerializeField] private float FindRange = 5f;
+    [SerializeField] private float FindRange = 3f;
     [SerializeField] private float RunSpeed = 2f;
 
     private Transform player;
@@ -27,15 +28,23 @@ public class MonsterAI : BaseCharater
 
     void Start()
     {
-        
+        Rigid2D = GetComponent<Rigidbody2D>();
+        base.animator = GetComponent<Animator>();
+        base.Speed = 2f;
+        base.HP = 1;
+        base.Atk = 2;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Sencing();
-        HandlChase();
-        Patrol();
+        Sencing(); // 감지
+
+        if (isChasing && player != null)
+            HandlChase();
+        else if(!isWaiting)
+            Patrol(); //순찰
+
     }
     void Patrol() //raycast로 땅 position 
     {
@@ -59,19 +68,28 @@ public class MonsterAI : BaseCharater
         if (isPlayerDetected)
             return;
 
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, FindRange, PlayerLayer);
-        if(hit != null && hit.CompareTag("Player"))
+        Vector2 boxSize = new Vector2(8f, 3f); // 가로 X, 세로 Y
+        Vector2 boxCenter = (Vector2)transform.position + new Vector2(0f, -0.1f);
+
+        Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0f, PlayerLayer);
+        if (hit != null && hit.CompareTag("Player"))
         {
-            Debug.Log("33");
             player = hit.transform;
             isPlayerDetected = true;
 
             if(!isWaiting)
             {
-                StartCoroutine(WaitThenChase());
+                StartCoroutine(WaitAndChase());
             }
         }
-        else { isPlayerDetected = false; }
+        else
+        {
+            if(isChasing)
+            {
+                isChasing = false;
+                player = null;
+            }
+        }
     }
     void HandlChase()
     {
@@ -80,10 +98,10 @@ public class MonsterAI : BaseCharater
 
         transform.position = Vector2.MoveTowards(transform.position, player.position, RunSpeed * Time.deltaTime);
     }
-    IEnumerator WaitThenChase()
+    System.Collections.IEnumerator WaitAndChase()
     {
         isWaiting = true;
-
+        Rigid2D.velocity = Vector2.zero;
         yield return new WaitForSecondsRealtime(3f); // 3초 대기
 
         isChasing = true;
@@ -92,6 +110,10 @@ public class MonsterAI : BaseCharater
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, FindRange);
+
+        // 박스 감지 시
+        Vector2 boxSize = new Vector2(8f, 3f);
+        Vector2 boxCenter = transform.position + new Vector3(0f, -0.1f);
+        Gizmos.DrawWireCube(boxCenter, boxSize);
     }
 }

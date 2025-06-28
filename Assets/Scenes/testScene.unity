@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 1296485834}
   - component: {fileID: 1296485833}
   - component: {fileID: 1296485832}
+  - component: {fileID: 1296485837}
   m_Layer: 7
   m_Name: Killer
   m_TagString: Enemy
@@ -421,7 +422,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.05, y: -0.05}
@@ -435,7 +436,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296485831}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -536,48 +537,39 @@ Transform:
   m_GameObject: {fileID: 1296485831}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: 4.35, z: 0.0714196}
+  m_LocalPosition: {x: -3, y: 3.65, z: 0.0714196}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1539721380 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
-  m_PrefabInstance: {fileID: 573737045813689976}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1539721385 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
-  m_PrefabInstance: {fileID: 573737045813689976}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1539721386
+--- !u!114 &1296485837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539721380}
+  m_GameObject: {fileID: 1296485831}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a20b4584f336c5a4ea8989b5e71b1be8, type: 3}
+  m_Script: {fileID: 11500000, guid: d3d428df618135a48951c0dc522fc231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 10
   Speed: 0
   Atk: 0
-  animator: {fileID: 0}
-  GroundCheck: {fileID: 1539721385}
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  GroundCheckDistance: 1
-  PlayerLayer:
+  patrolRange: 10
+  findRange: 5
+  playerLayer:
     serializedVersion: 2
     m_Bits: 8
-  FindRange: 4
-  RunSpeed: 2
+  chaseSpeed: 3.5
+  waitBeforeChase: 1
+--- !u!4 &1539721385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+  m_PrefabInstance: {fileID: 573737045813689976}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1852744458
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +735,7 @@ Transform:
   m_GameObject: {fileID: 1852744458}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.97, y: 1.15, z: 0}
+  m_LocalPosition: {x: 8.21, y: 1.15, z: 0}
   m_LocalScale: {x: 3.3, y: 3.3, z: 3.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -764,7 +756,6 @@ MonoBehaviour:
   HP: 0
   Speed: 0
   Atk: 0
-  animator: {fileID: 0}
   WalkForce: 10
   JumpForce: 10
   MaxSpeed: 2
@@ -780,6 +771,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5164236417680849150, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+      propertyPath: GroundCheck
+      value: 
+      objectReference: {fileID: 1539721385}
     - target: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_Name
       value: Monster
@@ -794,11 +789,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.61
+      value: 2.484
       objectReference: {fileID: 0}
     - target: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.32
+      value: 1.353
       objectReference: {fileID: 0}
     - target: {fileID: 6026715785121612065, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -835,10 +830,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1539721386}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
