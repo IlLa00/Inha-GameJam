@@ -5,20 +5,29 @@ using UnityEngine;
 public class BaseCharater : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField]
     public int HP = 10;
+    [SerializeField]
     public float Speed;
+    [SerializeField]
     public int Atk;
 
-    Animator animator;
+    public Animator animator;
 
     public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked,};
     protected State CurrentState;
 
     public virtual void Move() { }
-    public virtual void Attack() { }
+    public virtual void Attack(BaseCharater target)
+    {
+        target.TakeDamage(this.Atk);
+        ChangeState(State.Attack);
+    }
     public virtual void TakeDamage(int damage)
     {
         HP -= damage;
+        ChangeState(State.Be_Attacked);
+
         if(HP <= 0)
         {
             Die();
@@ -46,11 +55,12 @@ public class BaseCharater : MonoBehaviour
             case State.Walk:
                 animator.SetFloat("Speed", 0.5f);
                 break;
-            case State.Die:
-                animator.SetBool("IsDead", true);
+            case State.Be_Attacked:
+                animator.SetTrigger("be_Attacked");
                 break;
-            //case State.Attack:
-              
+            case State.Attack:
+                animator.SetTrigger("Attack");
+                break;
         }
     }
 
