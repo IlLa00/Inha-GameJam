@@ -6,12 +6,15 @@ public class InteractiveObject : MonoBehaviour
     [SerializeField] protected PlayerController Player;
 
     protected bool CanInteracting;
+    protected bool IsInteracting;
     protected float distance;
     
     public bool CanInteract() { return CanInteracting; }
+    public bool IsInteract() { return IsInteracting; }
 
     void Start()
     {
+
     }
 
     protected virtual void Update()
@@ -22,10 +25,22 @@ public class InteractiveObject : MonoBehaviour
             CanInteracting = true;
         else
             CanInteracting = false;
+
+        if(IsInteract() && (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)))
+            OffInteractive();
         
     }
 
-    public virtual void OnInteractive() { }
-    protected virtual void OffInteractive() { }
+    public virtual void OnInteractive()
+    {
+        if(!IsInteract())
+            IsInteracting = true;
+    }
+
+    protected virtual void OffInteractive()
+    {
+        if (IsInteract())
+            IsInteracting = false;
+    }
 
 }

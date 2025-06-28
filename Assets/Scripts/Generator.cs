@@ -13,13 +13,15 @@ public class Generator : InteractiveObject
     private float Min_Range;
     private float Max_Range;
 
-    private bool IsComplete = false;
+    private bool IsCompleting = false;
     private bool IsRepairing = false;
     private bool IsPlayingGame = false;
 
     public float GetCurrentProgress() { return CurrentProgress; }
     public float GetMinRange() { return Min_Range; }
     public float GetMaxRange() { return Max_Range; }
+
+    public bool IsComplete() { return IsCompleting; }
     public bool IsRepair() { return IsRepairing; }
     public bool IsPlayGame() { return IsPlayingGame; }
 
@@ -32,21 +34,29 @@ public class Generator : InteractiveObject
     {
         base.Update();
 
-        if (!IsComplete && IsRepairing && !IsPlayingGame && CurrentProgress < MaxProgress)
+        if (!IsCompleting && IsRepairing && !IsPlayingGame && CurrentProgress < MaxProgress)
         {
+            // Debug.Log("Generateor OnInteracting");
+
             if (CurrentProgress >= MaxProgress) // 맥스 게이지에 도달하면 완료 처리
             {
-                IsComplete = true;
+                IsCompleting = true;
                 IsRepairing = false;
             }
 
             // 발전기 게이지 상승
             CurrentProgress += 0.01f * Time.deltaTime;
             CurrentProgress = Mathf.Clamp(CurrentProgress, 0f, MaxProgress);
+            // Debug.Log(CurrentProgress);
 
+            // Debug.Log(RandomGameStart);
+            
             GameTimer += Time.deltaTime;
             if (GameTimer > RandomGameStart)
+            {
+                // Debug.Log("!!");
                 StartMiniGame();
+            }
 
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) // 이동키 입력 시, 탈출
             {
@@ -65,7 +75,8 @@ public class Generator : InteractiveObject
 
     public override void OnInteractive()
     {
-        if (IsComplete) return; // 성공한거면 안함.
+        if (IsInteracting) return;
+        if (IsCompleting) return; // 성공한거면 안함.
 
         Debug.Log("Starting Generateor OnInteractive");
 
@@ -79,8 +90,16 @@ public class Generator : InteractiveObject
     {
         Debug.Log("Starting Generateor Minigame");
 
-        Max_Range = Random.Range(0.2f, 1f);
-        Min_Range = Max_Range - 0.2f;
+        if(IsPlayingGame == false)
+        {
+            IsPlayingGame = true;
+            Max_Range = Random.Range(0.2f, 1f);
+            Min_Range = Max_Range - 0.2f;
+
+            Debug.Log(Max_Range);
+            Debug.Log(Min_Range);
+        }
+       
     }
 
     public void SuccessMiniGame()
@@ -90,6 +109,7 @@ public class Generator : InteractiveObject
 
     public void FailMiniGame()
     {
+        // 게임센터에 큰 소리
         CurrentProgress -= FailProgress;
     }
 
