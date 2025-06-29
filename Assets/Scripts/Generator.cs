@@ -45,7 +45,7 @@ public class Generator : InteractiveObject
             }
 
             // 발전기 게이지 상승
-            CurrentProgress += 0.01f * Time.deltaTime;
+            CurrentProgress += 0.05f * Time.deltaTime;
             CurrentProgress = Mathf.Clamp(CurrentProgress, 0f, MaxProgress);
             // Debug.Log(CurrentProgress);
 
@@ -96,8 +96,8 @@ public class Generator : InteractiveObject
             Max_Range = Random.Range(0.2f, 1f);
             Min_Range = Max_Range - 0.2f;
 
-            Debug.Log(Max_Range);
-            Debug.Log(Min_Range);
+            //Debug.Log(Max_Range);
+            //Debug.Log(Min_Range);
         }
        
     }
@@ -105,12 +105,14 @@ public class Generator : InteractiveObject
     public void SuccessMiniGame()
     {
         CurrentProgress += SuccessProgress;
+        StopMiniGame();
     }
 
     public void FailMiniGame()
     {
         // 게임센터에 큰 소리
         CurrentProgress -= FailProgress;
+        StopMiniGame();
     }
 
     private void StopMiniGame()

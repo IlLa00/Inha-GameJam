@@ -152,9 +152,9 @@ public class PlayerController : BaseCharater
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-            Vector2 origin = Rigid2D.position + new Vector2(10, 0);
+            Vector2 origin = Rigid2D.position;
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 5f, LayerMask.GetMask("Interactive_object"));
             Debug.DrawRay(origin, Vector2.right * 3f, Color.green);
 
             if (hit)
@@ -162,12 +162,18 @@ public class PlayerController : BaseCharater
                 GameObject hitObject = hit.collider.gameObject;
                 InteractiveObject ob = hit.collider.gameObject.GetComponent<InteractiveObject>();
 
-                if(ob.CanInteract())
+                Debug.Log("dddddd");
+
+                if (ob.CanInteract()) 
+                {
+                    Debug.Log("!!");
                     ob.OnInteractive();
+                }
             }
 
         }
     }
+
     bool IsGrounded()
     {
         float rayOffsetY = -0.5f; // 필요에 따라 조정
