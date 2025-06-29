@@ -16,7 +16,7 @@ public class NoiseLevelUI : MonoBehaviour
 
     private void Start()
     {
-        player.GetNoisePos += StartChase;
+        player.GetPlayerTransform += StartChase;
     }
 
     private void StartChase(Transform NoisePos)

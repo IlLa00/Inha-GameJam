@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
@@ -30,6 +31,10 @@ public class PlayerController : BaseCharater
     public event Action<int> UpdateHP;
     public event Action<Transform> GetPlayerTransform;
     public event Action OpenGameOverPanel;
+
+    private bool IsHide = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -227,5 +232,24 @@ public class PlayerController : BaseCharater
     {
         base.TakeDamage(damage);
         UpdateHP?.Invoke(this.HP);
+    }
+
+    public void OnHide()
+    {
+        // 시야각 처리
+        IsHide = true;
+
+        Renderer playerRenderer = GetComponent<Renderer>();
+        if (playerRenderer != null)
+            playerRenderer.enabled = false; // 렌더링만 끔
+    }
+
+    public void OffHide()
+    {
+        IsHide = false;
+
+        Renderer playerRenderer = GetComponent<Renderer>();
+        if (playerRenderer != null)
+            playerRenderer.enabled = true;
     }
 }

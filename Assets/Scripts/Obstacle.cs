@@ -1,11 +1,8 @@
-﻿using System.ComponentModel;
-using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+﻿using UnityEngine;
 
 public class Obstacle : InteractiveObject
 {
-
-    private bool IsHide = false;
+    private bool isHide = false;
 
     void Start()
     {
@@ -26,16 +23,18 @@ public class Obstacle : InteractiveObject
 
     void OnOffHide()
     {
-        if(!IsHide)
+        if(!isHide)
         {
             Debug.Log("캐비닛에 숨었다!");
-            IsHide = true;
+            isHide = true;
+
             Player.OnHide();
         }
         else
         {
             Debug.Log("캐비닛에 나왔다!");
-            IsHide = false;
+            isHide = false;
+
             Player.OffHide();
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class KliierAI : BaseCharater
 {
-    public float patrolRange = 10f; // °¨Áö °Å¸® ¸Ê¸¸Å­À¸·Î ¹Ù²ã¾ßÇÔ
+    public float patrolRange = 10f; // ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½Ê¸ï¿½Å­ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½
     public float findRange = 5f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
