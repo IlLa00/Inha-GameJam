@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,13 +40,13 @@ public class BaseCharater : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} Die");
 
-        //GetComponent<Collider2D>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
         this.enabled = false;
-        //DropItem();
-        // 3. ÀÏÁ¤ ½Ã°£ ÈÄ ¿ÀºêÁ§Æ® Á¦°Å
+        // 3. ì¼ì • ì‹œê°„ í›„ ì˜¤ë¸Œì íŠ¸ ì œê±°
         //Destroy(gameObject, 1.5f);
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
+
     public virtual void ChangeState(State newState)
     {
         switch (newState)
