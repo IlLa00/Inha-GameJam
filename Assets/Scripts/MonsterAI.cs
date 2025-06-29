@@ -81,6 +81,9 @@ public class MonsterAI : BaseCharater
     }
     void Sencing()
     {
+        if (isPlayerDetected)
+            return;
+
         Vector2 boxSize = new Vector2(8f, 3f); // 가로 X, 세로 Y
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(0f, -0.1f);
 
