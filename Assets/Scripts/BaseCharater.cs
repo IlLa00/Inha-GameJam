@@ -48,7 +48,7 @@ public class BaseCharater : MonoBehaviour
         this.enabled = false;
         //DropItem();
         // 3. 일정 시간 후 오브젝트 제거
-        Destroy(gameObject, 1.5f);
+        //Destroy(gameObject, 1.5f);
     }
     public virtual void ChangeState(State newState)
     {

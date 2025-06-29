@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class KliierAI : BaseCharater
@@ -21,7 +22,7 @@ public class KliierAI : BaseCharater
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttack = false;
-    
+    private bool isFullNoiseLevel = false;
 
     void Start()
     {
@@ -34,6 +35,11 @@ public class KliierAI : BaseCharater
 
     void Update()
     {
+        if (isFullNoiseLevel)
+        {
+            Chase();
+            return;
+        }
         DetectPlayer();
 
         if (isChasing && player != null)
@@ -45,6 +51,13 @@ public class KliierAI : BaseCharater
             StartCoroutine(AttackPlayer());
     }
 
+
+    public void ChasePlayer(Transform noiseTransform)
+    {
+        player = noiseTransform;
+        isFullNoiseLevel = true;
+        Chase();
+    }
     void DetectPlayer()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, findRange, playerLayer);
@@ -100,11 +113,26 @@ public class KliierAI : BaseCharater
     {
         if (player == null) return;
 
-        Vector3 targetPos = player.position;
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
-
-        float direction = targetPos.x - transform.position.x;
-        FlipSprite(direction);
+        
+        if (isFullNoiseLevel)
+        {
+            if(transform.position == player.position)
+            {
+                isFullNoiseLevel = false;
+                return;
+            }
+            transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
+            float direction = player.position.x - transform.position.x;
+            FlipSprite(direction);
+        }
+        else
+        {
+            Vector3 targetPos = player.position;
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+            float direction = targetPos.x - transform.position.x;
+            FlipSprite(direction);
+        }
+                  
     }
 
     void FlipSprite(float dir)

@@ -119,6 +119,8 @@ public class Generator : InteractiveObject
     public void FailMiniGame()
     {
         // 게임센터에 큰 소리
+        Player.IncreaseCurrentNoiseLevel(20);
+
         CurrentProgress -= FailProgress;
         Debug.Log(CurrentProgress);
         StopMiniGame();

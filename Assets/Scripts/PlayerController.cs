@@ -28,6 +28,7 @@ public class PlayerController : BaseCharater
     Rigidbody2D Rigid2D;
 
     public event Action<int> UpdateHP;
+    public event Action<Transform> GetPlayerTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -58,8 +59,8 @@ public class PlayerController : BaseCharater
             // 쵸비상메세지를 센터한테보내고 센터는 이걸 받아서 살인마한테 야 저새기 저깃다 가라 <- 객체지향적
             // 살인마는 그럼 플레이어를 안다 <- 객체지향에 위배가 약간 될수도있음
             // 센터한테 함수를 보내는데 이 함수에는 플레이어 위치를 보내요 센터는 그걸듣고 살인마한테 받은 플레이어위치를 보낸다
-            // 나는 응 구현만할꺼야
-            
+            GetPlayerTransform?.Invoke(this.transform);
+            CurrentNoiseLevel = 0;
         }
     }
 
@@ -154,7 +155,7 @@ public class PlayerController : BaseCharater
         }
         else if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
-            Vector2 origin = Rigid2D.position + new Vector2(10, 0);
+            Vector2 origin = Rigid2D.position;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
             Debug.DrawRay(Rigid2D.position, Vector2.right * 3f, Color.green);
@@ -214,5 +215,12 @@ public class PlayerController : BaseCharater
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(attackPoint, boxSize);
+    }
+
+    protected override void Die()
+    {
+        this.gameObject.SetActive(false);
+        
+        base.Die();
     }
 }

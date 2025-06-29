@@ -16,7 +16,6 @@ public class MonsterSpawnCenter : MonoBehaviour
     private List<MonsterSpawnData> spawnList;
 
     private List<GameObject> spawnedMonsters = new List<GameObject>();
-
     private void Start()
     {
         foreach (var data in spawnList)
@@ -24,7 +23,7 @@ public class MonsterSpawnCenter : MonoBehaviour
             GameObject monster = Instantiate(data.prefab, data.spawnPosition, Quaternion.identity);
             spawnedMonsters.Add(monster);
 
-            //Monster m = monster.GetComponent<Monster>();
+            //MonsterAI m = monster.GetComponent<MonsterAI>();
             //m.OnDeath += (dead) =>
             //{
             //    StartCoroutine(RespawnAfterDelay(data, monster));

@@ -12,15 +12,16 @@ public class NoiseLevelUI : MonoBehaviour
     private PlayerController player; // 
     [SerializeField]
     private KliierAI killer;
-    //public event Action<Transform> PlayerTransform; // PlayerController에서 설정할 것
+    // // PlayerController에서 설정할 것
+
     private void Start()
     {
-        //player.PlayerTransform += StartChase;
+        player.GetPlayerTransform += StartChase;
     }
 
     private void StartChase(Transform playerTransform)
     {
-        //killer.ChasePlayer(playerTransform); // KillerAI에서 해당 위치로 바로 이동하는 함수를 만들어야 함;
+        killer.ChasePlayer(playerTransform); // KillerAI에서 해당 위치로 바로 이동하는 함수를 만들어야 함;
     }
     private void LateUpdate()
     {
