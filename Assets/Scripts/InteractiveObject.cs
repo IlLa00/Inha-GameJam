@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.ComponentModel;
+using UnityEngine;
 
 public class InteractiveObject : MonoBehaviour
 {
@@ -42,5 +43,4 @@ public class InteractiveObject : MonoBehaviour
         if (IsInteract())
             IsInteracting = false;
     }
-
 }
