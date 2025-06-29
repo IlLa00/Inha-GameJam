@@ -162,13 +162,8 @@ public class PlayerController : BaseCharater
                 GameObject hitObject = hit.collider.gameObject;
                 InteractiveObject ob = hit.collider.gameObject.GetComponent<InteractiveObject>();
 
-                Debug.Log("dddddd");
-
                 if (ob.CanInteract()) 
-                {
-                    Debug.Log("!!");
                     ob.OnInteractive();
-                }
             }
 
         }
