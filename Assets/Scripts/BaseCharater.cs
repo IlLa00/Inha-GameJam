@@ -17,7 +17,6 @@ public class BaseCharater : MonoBehaviour
     public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked,};
     protected State CurrentState;
 
-    float attack_delay = 3f;
 
     public virtual void Attack(BaseCharater target)
     {
@@ -52,9 +51,6 @@ public class BaseCharater : MonoBehaviour
     }
     public virtual void ChangeState(State newState)
     {
-        if (CurrentState == newState)
-            return;
-
         CurrentState = newState;
 
         switch (newState)
@@ -63,7 +59,7 @@ public class BaseCharater : MonoBehaviour
                 animator.SetFloat("Speed", 0);
                 break;
             case State.Walk:
-                animator.SetFloat("Speed", 0.1f);
+                animator.SetFloat("Speed", 0.5f);
                 break;
             case State.Be_Attacked:
                 animator.SetTrigger("be_Attacked");

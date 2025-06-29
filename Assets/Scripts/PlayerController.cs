@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
+using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UI.Image;
 
@@ -19,7 +20,6 @@ public class PlayerController : BaseCharater
     [SerializeField] private float CurrentNoiseLevel = 0;
     [SerializeField] private float RunForce = 20.0f;
     [SerializeField] private float RunMaxSpeed = 4.0f;
-    [SerializeField] private float AttackRange = 2f;
     [SerializeField] private Transform attackOrigin;
     [SerializeField] private Vector2 boxSize = new Vector2(1.5f, 1f);
     [SerializeField] private float attackRangeX = 1.0f;
@@ -29,6 +29,8 @@ public class PlayerController : BaseCharater
 
     public event Action<int> UpdateHP;
     public event Action<Transform> GetPlayerTransform;
+
+    private bool canAttack = true;
 
     // Start is called before the first frame update
     void Start()
@@ -72,9 +74,6 @@ public class PlayerController : BaseCharater
 
     public override void ChangeState(State newState)
     {
-        if (CurrentState == newState)
-            return;
-
         CurrentState = newState;
         // 하위 클래스에서 override 가능
 
@@ -87,11 +86,11 @@ public class PlayerController : BaseCharater
                 base.animator.SetFloat("Speed", 0.5f);
                 break;
             case State.Run:
-                base.animator.SetFloat("Speed", 1.0f);
+                base.animator.SetFloat("Speed", 1.2f);
                 break;
-            case State.Jump:
-                base.animator.SetBool("IsJumping", true);
-                break;
+            //case State.Jump:
+            //    base.animator.SetBool("IsJumping", true);
+            //    break;
             case State.Die:
                 base.animator.SetTrigger("Die");
                 break;
@@ -99,7 +98,10 @@ public class PlayerController : BaseCharater
                 base.animator.SetTrigger("IsAttacking");
                 break;
             case State.Be_Attacked:
-                base.animator.SetTrigger("be_Attacked");
+                base.animator.SetTrigger("IsAttacked");
+                break;
+            case State.Jump:
+                base.animator.SetTrigger("Jump");
                 break;
         }
     }
@@ -146,19 +148,20 @@ public class PlayerController : BaseCharater
         if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
         {
             this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
+            animator.ResetTrigger("Jump");
             ChangeState(State.Jump);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             //플랫포머 내려오기?
-            ChangeState(State.Jump);
+            //ChangeState(State.Jump);
         }
         else if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
-            Vector2 origin = Rigid2D.position;
+            Vector2 origin = Rigid2D.position + new Vector2(-3f, 0);
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
-            Debug.DrawRay(Rigid2D.position, Vector2.right * 3f, Color.green);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 6f, LayerMask.GetMask("Interactive_object"));
+            Debug.DrawRay(origin, Vector2.right * 6f, Color.green);
 
             if (hit)
             {
@@ -169,8 +172,10 @@ public class PlayerController : BaseCharater
                     ob.OnInteractive();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Z)) //공격
+        else if (Input.GetKeyDown(KeyCode.Z) && canAttack) //공격
         {
+            StartCoroutine(AttackRoutine());
+            
             ChangeState(State.Attack);
             // 공격, 스턴건
             // 만약 손에 스턴건이 있으면 스턴건 발사
@@ -223,4 +228,18 @@ public class PlayerController : BaseCharater
         
         base.Die();
     }
+    System.Collections.IEnumerator AttackRoutine()
+    {
+        canAttack = false;
+
+        base.animator.ResetTrigger("IsAttacking");
+        ChangeState(State.Attack);
+        PerformAttack();
+
+        float attackDuration = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(attackDuration); // ⏱ 공격 딜레이 시간 설정 (예: 0.8초)
+
+        canAttack = true;
+    }
+
 }

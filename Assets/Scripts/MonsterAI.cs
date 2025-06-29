@@ -22,9 +22,7 @@ public class MonsterAI : BaseCharater
     [SerializeField] private float offsetX = 0.5f;
 
     [SerializeField] private LayerMask PlayerLayer;
-    [SerializeField] private float FindRange = 3f;
     [SerializeField] private float RunSpeed = 2f;
-    [SerializeField] private float AttackRange = 1.5f;
     [SerializeField] private float attackrangeX = 1.0f;
     [SerializeField] private Transform attakOrigin;
     [SerializeField] private Vector2 boxsize = new Vector2(0.8f, 1f);
@@ -117,13 +115,12 @@ public class MonsterAI : BaseCharater
     {
         if (!isChasing || player == null)
             return;
-
+        base.ChangeState(State.Walk);
         float dirToPlayer = player.position.x - transform.position.x;
         if ((isMovingRight && dirToPlayer < 0) || (!isMovingRight && dirToPlayer > 0))
         {
             flip();
         }
-        base.ChangeState(State.Walk);
         transform.position = Vector2.MoveTowards(transform.position, player.position, RunSpeed * Time.deltaTime);
     }
     //void IsOnAttackPlayer()
@@ -161,10 +158,9 @@ public class MonsterAI : BaseCharater
             isAttack = true;
             ChangeState(State.Attack);
             base.Attack(hit.GetComponent<PlayerController>());
-            yield return new WaitForSecondsRealtime(2f);
+            yield return new WaitForSecondsRealtime(3f);
             isAttack = false;
         }
-        
     }
 
     void OnDrawGizmosSelected()

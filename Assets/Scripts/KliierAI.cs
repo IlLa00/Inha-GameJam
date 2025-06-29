@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class KliierAI : BaseCharater
 {
-    public float patrolRange = 10f;
+    public float patrolRange = 10f; // °¨Áö °Å¸® ¸Ê¸¸Å­À¸·Î ¹Ù²ã¾ßÇÔ
     public float findRange = 5f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
-    public float chaseSpeed = 3.5f;
+    public float chaseSpeed = 4.0f;
     public float waitBeforeChase = 1f;
 
     public float attackrangeX = 1.0f;
-    public float attackrangeY = 1.0f;
     private Transform attakOrigin;
-    private Vector2 boxsize = new Vector2(0.8f, 1f);
     private Vector3 startPosition;
 
     private bool isMovingRight = true;
@@ -27,10 +25,10 @@ public class KliierAI : BaseCharater
     void Start()
     {
         startPosition = transform.position;
-        base.Speed = 2f;
+        base.Speed = 3f;
         base.Atk = 5;
         base.animator = GetComponent<Animator>();
-        base.HP = 100;
+        base.HP = 1000;
     }
 
     void Update()
@@ -88,11 +86,6 @@ public class KliierAI : BaseCharater
         isChasing = true;
         isWaiting = false;
     }
-    System.Collections.IEnumerator AttackPlayer()
-    {
-        Vector2 offset = new Vector2(transform.localScale.x > 0 ? attackrangeX : -attackrangeX, 0);
-        yield return new WaitForSeconds(2f);
-    }
 
     void Patrol() //¼øÂû
     {
@@ -135,6 +128,22 @@ public class KliierAI : BaseCharater
                   
     }
 
+    System.Collections.IEnumerator AttackPlayer()
+    {
+        float Radius = 1.5f;
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, Radius);
+
+        if (hit != null && hit.CompareTag("Player"))
+        {
+            isAttack = true;
+            ChangeState(State.Attack);
+            base.Attack(hit.GetComponent<PlayerController>());
+            yield return new WaitForSecondsRealtime(5f);
+            isAttack = false;
+        }
+
+    }
+
     void FlipSprite(float dir)
     {
         if (dir == 0) return;
@@ -147,6 +156,9 @@ public class KliierAI : BaseCharater
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, findRange);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, 1.5f);
     }
 
 }
