@@ -7,7 +7,7 @@ public class GeneratorGameUI : MonoBehaviour
     [SerializeField] private RectTransform successZone;
     [SerializeField] private Generator generator;
 
-    [SerializeField] private float sliderSpeed = 1f;
+    [SerializeField] private float sliderSpeed = 0.3f;
 
     private float SuccessZoneMin;
     private float SuccessZoneMax;
@@ -75,16 +75,21 @@ public class GeneratorGameUI : MonoBehaviour
             {
                 Debug.Log("Success");
                 generator.SuccessMiniGame();
+                isMovingRight = false;
+                gameSlider.gameObject.SetActive(false);
             }
             else
+            {
+                Debug.Log("Fail");
                 generator.FailMiniGame();
-
-
-            gameSlider.gameObject.SetActive(false);
+                isMovingRight = false;
+                gameSlider.gameObject.SetActive(false);
+            }
         }
 
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) // 이동키 입력 시, 탈출
         {
+            generator.FailMiniGame();
             isMovingRight = false;
             gameSlider.gameObject.SetActive(false);
         }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Generator : InteractiveObject
 {
@@ -32,20 +33,26 @@ public class Generator : InteractiveObject
 
     protected override void Update()
     {
+        if (IsComplete()) return;
+
         base.Update();
 
-        if (!IsCompleting && IsRepairing && !IsPlayingGame && CurrentProgress < MaxProgress)
+        if (CurrentProgress >= MaxProgress) // 맥스 게이지에 도달하면 완료 처리
+        {
+            IsCompleting = true;
+            IsRepairing = false;
+            return;
+        }
+
+        if (!IsComplete() && IsRepairing && !IsPlayingGame && CurrentProgress < MaxProgress)
         {
             // Debug.Log("Generateor OnInteracting");
 
-            if (CurrentProgress >= MaxProgress) // 맥스 게이지에 도달하면 완료 처리
-            {
-                IsCompleting = true;
-                IsRepairing = false;
-            }
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.red;
 
             // 발전기 게이지 상승
-            CurrentProgress += 0.01f * Time.deltaTime;
+            CurrentProgress += 0.05f * Time.deltaTime;
             CurrentProgress = Mathf.Clamp(CurrentProgress, 0f, MaxProgress);
             // Debug.Log(CurrentProgress);
 
@@ -63,20 +70,23 @@ public class Generator : InteractiveObject
                 IsRepairing = false;
                 IsPlayingGame = false;
             }
-
         }
 
-        if(IsPlayingGame)
+        if(!IsRepair())
         {
-
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.white;
         }
-
     }
 
     public override void OnInteractive()
     {
         if (IsInteracting) return;
-        if (IsCompleting) return; // 성공한거면 안함.
+        if (IsComplete())
+        {
+            Debug.Log("끝난 발전기!!");
+            return; // 성공한거면 안함.
+        }
 
         Debug.Log("Starting Generateor OnInteractive");
 
@@ -95,9 +105,6 @@ public class Generator : InteractiveObject
             IsPlayingGame = true;
             Max_Range = Random.Range(0.2f, 1f);
             Min_Range = Max_Range - 0.2f;
-
-            Debug.Log(Max_Range);
-            Debug.Log(Min_Range);
         }
        
     }
@@ -105,12 +112,16 @@ public class Generator : InteractiveObject
     public void SuccessMiniGame()
     {
         CurrentProgress += SuccessProgress;
+        Debug.Log(CurrentProgress);
+        StopMiniGame();
     }
 
     public void FailMiniGame()
     {
         // 게임센터에 큰 소리
         CurrentProgress -= FailProgress;
+        Debug.Log(CurrentProgress);
+        StopMiniGame();
     }
 
     private void StopMiniGame()

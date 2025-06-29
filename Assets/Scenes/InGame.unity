@@ -409,7 +409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &231135995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,7 +589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &338089713
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2349,7 +2349,6 @@ MonoBehaviour:
   HP: 0
   Speed: 0
   Atk: 0
-  animator: {fileID: 0}
   WalkForce: 10
   JumpForce: 10
   MaxSpeed: 2
@@ -3003,6 +3002,7 @@ MonoBehaviour:
   full_Heart: {fileID: 21300000, guid: 0e97401479d0d8f4b97facb4c937f6d2, type: 3}
   HeartPrefab: {fileID: 5383301417027865236, guid: a995176bfc46ed941bde45426bc32396, type: 3}
   HeartContainer: {fileID: 1079892466}
+  gameOverPanel: {fileID: 338089712}
   player: {fileID: 1319847562}
 --- !u!1 &2147415645
 GameObject:

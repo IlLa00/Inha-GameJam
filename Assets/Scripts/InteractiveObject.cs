@@ -33,7 +33,7 @@ public class InteractiveObject : MonoBehaviour
 
     public virtual void OnInteractive()
     {
-        if(!IsInteract())
+        if (!IsInteract())
             IsInteracting = true;
     }
 
