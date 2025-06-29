@@ -11,13 +11,16 @@ public class GeneratorCenter : MonoBehaviour
     [SerializeField]
     private Sprite emptyGenerator;
     [SerializeField]
-    public GameObject generatorImagePrefab;
+    private GameObject generatorImagePrefab;
     [SerializeField]
-    public Transform generatorUIContainer;
+    private Transform generatorUIContainer;
+    [SerializeField]
+    private Exit exit;
 
     private List<Generator> collectedGenerators = new List<Generator>();
     private List<Image> generatorCountImages = new List<Image>();
 
+    private bool isCompleteGenerator = false;
     // Start is called before the first frame update
     private void Start()
     {
@@ -45,10 +48,9 @@ public class GeneratorCenter : MonoBehaviour
     }
     private void UpdateGeneratorUI()
     {
-        int generator_Index = 0;
-        if (collectedGenerators.Count == 0)
+        if (collectedGenerators.Count == 0 || isCompleteGenerator)
             return;
-        
+        int generator_Index = 0;
         for (int i = 0; i < collectedGenerators.Count; i++)
         {
             //Debug.Log(collectedGenerators[i].IsComplete());
@@ -57,6 +59,11 @@ public class GeneratorCenter : MonoBehaviour
                 generatorCountImages[generator_Index].sprite = fullGenerator;
                 generator_Index++;
             }
+        }
+        if(generator_Index == collectedGenerators.Count)
+        {
+            exit.gameObject.SetActive(true);
+            isCompleteGenerator = true;
         }
     }
 }

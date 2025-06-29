@@ -16,20 +16,16 @@ public class PlayerHeartUI : MonoBehaviour
     private GameObject HeartPrefab;
     [SerializeField]
     private Transform HeartContainer;
-
+    [SerializeField]
+    private GameObject gameOverPanel;
     [SerializeField]
     private PlayerController player;
     
     private List<Image> HeartImages = new List<Image>();
 
-    //private void Awake()
-    //{
-    //    player.UpdateHP += UpdateHP_UI;
-    //}
-
     private void Awake()
     {
-        player.UpdateHP += UpdateHP_UI;
+        player.UpdateHP += UpdateHP_UI; //플레이어의 UpdateHP를 UpdateHP_UI가 구독
     }
 
     // Start is called before the first frame update
@@ -64,6 +60,11 @@ public class PlayerHeartUI : MonoBehaviour
             {
                 HeartImages[i].sprite = empty_Heart;
             }
+        }
+
+        if(playerHP == 0) //게임 오버 창 생성
+        {
+            gameOverPanel.SetActive(true);
         }
     }
 }
