@@ -6,12 +6,17 @@ using UnityEngine.UI;
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField]
-    private Sprite StunGunSprite;
-    [SerializeField]
     private Image item;
+    [SerializeField]
+    private PlayerController player;
+    private Inventory inventory;
     // Start is called before the first frame update
     void Start()
     {
+        //Inventory Inventory = GetComponent<Inventory>();
+        inventory =  player.GetInventory();
+        inventory.AddInventoryUI += GetItem;
+        inventory.UseInventoryUI += UseItem;
         Color color = item.color;
         color.a = 0;
         item.color = color;
@@ -22,7 +27,7 @@ public class InventoryUI : MonoBehaviour
         Color color = item.color;
         color.a = 100;
         item.color = color;
-        item.sprite = StunGunSprite;
+        item.sprite = inventory.getItems()[0].Key.Itemicon;
     }
 
     public void UseItem()

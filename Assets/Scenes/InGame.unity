@@ -1948,7 +1948,7 @@ GameObject:
   - component: {fileID: 555423428}
   - component: {fileID: 555423427}
   - component: {fileID: 555423426}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5702,7 +5702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnList:
   - prefab: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
-    spawnPosition: {x: -15, y: 0, z: 0}
+    spawnPosition: {x: 0, y: 0, z: 0}
     respawnDelay: 5
 --- !u!1 &1146442782
 GameObject:
@@ -5748,8 +5748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb459c1f2272674998591b0e2796ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StunGunSprite: {fileID: 0}
   item: {fileID: 806023100}
+  player: {fileID: 953720614}
 --- !u!1 &1147359433
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Item : MonoBehaviour
 {
-    private Sprite Itemicon;
+    public Sprite Itemicon;
     private string Itemname;
     protected bool isDropped = false;
 
@@ -83,7 +83,7 @@ public abstract class Item : MonoBehaviour
     {
         // 픽업용 콜라이더
         CircleCollider2D pickupCollider = gameObject.AddComponent<CircleCollider2D>();
-        pickupCollider.radius = 1f;
+        pickupCollider.radius = 0.1f;
         pickupCollider.isTrigger = true;
 
         // 픽업 감지 컴포넌트 추가
@@ -171,6 +171,23 @@ public abstract class Item : MonoBehaviour
 
         Destroy(gameObject);
     }
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = Vector2.zero;      // 움직임 멈춤
+                rb.gravityScale = 0f;            // 중력 제거
+                rb.isKinematic = true;           // 물리 시뮬레이션 중단
+            }
 
+            // 필요하면 바닥에 고정 위치 설정
+            Vector3 pos = transform.position;
+            pos.y = collision.contacts[0].point.y; // 접촉 지점 기준으로 정렬
+            transform.position = pos;
+        }
+    }
     public abstract void OnExecute();
 }

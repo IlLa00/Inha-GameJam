@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class StunGun : Item
 {
@@ -8,11 +9,16 @@ public class StunGun : Item
 
     void Awake()
     {
-        Initialize("Stun Gun", Resources.Load<Sprite>("StungunIcon"));
+        Initialize("Stun Gun", Resources.Load<Sprite>("StunGun"));
+
     }
 
     void Start()
     {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        renderer.sprite = Itemicon;
+        renderer.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+
         playerCamera = Camera.main;
         if (playerCamera == null)
             playerCamera = FindObjectOfType<Camera>();

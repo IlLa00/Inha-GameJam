@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -7,6 +8,9 @@ public class Inventory : MonoBehaviour
     int CurrentItemIndex = 0;
 
     public bool IsInventoryEmpty() { return items.Count <= 0; }
+
+    public event Action AddInventoryUI;
+    public event Action UseInventoryUI;
 
     void Start()
     {
@@ -18,6 +22,10 @@ public class Inventory : MonoBehaviour
         
     }
 
+    public List<KeyValuePair<Item, int>> getItems()
+    {
+        return items;
+    }
     public void AddItem(Item item)
     {
         for (int i = 0; i < items.Count; i++)
@@ -33,6 +41,7 @@ public class Inventory : MonoBehaviour
 
         // 새로운 아이템 추가
         items.Add(new KeyValuePair<Item, int>(item, 1));
+        AddInventoryUI?.Invoke();
         Debug.Log($"{item.name} 새로 추가됨. 수량: 1");
     }
 
@@ -53,6 +62,7 @@ public class Inventory : MonoBehaviour
         int newQuantity = currentItem.Value - 1;
         if (newQuantity <= 0)
         {
+            UseInventoryUI?.Invoke();
             items.RemoveAt(CurrentItemIndex);
             Debug.Log($"{currentItem.Key}이(가) 모두 소모되어 인벤토리에서 제거되었습니다.");
         }

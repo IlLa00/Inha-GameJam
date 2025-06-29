@@ -49,6 +49,10 @@ public class PlayerController : BaseCharater
         inventory = GetComponent<Inventory>();
     }
 
+    public Inventory GetInventory()
+    {
+        return inventory;
+    }
     public float GetNoiseLevel()
     {
         return NoiseLevel;
