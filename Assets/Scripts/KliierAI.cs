@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class KliierAI : BaseCharater
 {
-    public float patrolRange = 10f; // ���� �Ÿ� �ʸ�ŭ���� �ٲ����
+    public float patrolRange = 10f; // 맵 범위 만큼 순찰
     public float findRange = 5f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
     public float chaseSpeed = 4.0f;
     public float waitBeforeChase = 1f;
+    private float patrolYRange = 1.5f;
+    private float yUpdateInterval = 2f;
+    private float nextYUpdateTime = 0f;
+    private float targetY;
 
     public float attackrangeX = 1.0f;
-    private Transform attakOrigin;
     private Vector3 startPosition;
 
     private bool isMovingRight = true;
@@ -25,10 +29,16 @@ public class KliierAI : BaseCharater
     void Start()
     {
         startPosition = transform.position;
+        targetY = startPosition.y;
+        nextYUpdateTime = Time.time + yUpdateInterval;
+
+        startPosition = transform.position;
         base.Speed = 3f;
         base.Atk = 5;
         base.animator = GetComponent<Animator>();
-        base.HP = 1000;
+        base.HP = 10;
+
+        base.TakeDamage(30);
     }
 
     void Update()
@@ -44,7 +54,7 @@ public class KliierAI : BaseCharater
             else if (!isWaiting)
                 Patrol();
 
-            if (!isAttack)
+            if (!isAttack && isChasing)
                 StartCoroutine(AttackPlayer());
         }
             
@@ -66,6 +76,7 @@ public class KliierAI : BaseCharater
             {
                 isWaiting = true;
                 player = hit.transform;
+                //findPosition.position = transform.position;
                 StartCoroutine(WaitAndChase());
             }
         }
@@ -93,7 +104,14 @@ public class KliierAI : BaseCharater
         Vector3 newPos = transform.position + Vector3.right * direction * Speed * Time.deltaTime;
 
         // Y 고정
-        newPos.y = startPosition.y;
+        if (Time.time >= nextYUpdateTime)
+        {
+            targetY = startPosition.y + Random.Range(-patrolYRange, patrolYRange);
+            nextYUpdateTime = Time.time + yUpdateInterval;
+        }
+
+        // Y를 부드럽게 목표까지 이동
+        newPos.y = Mathf.Lerp(transform.position.y, targetY, 2f * Time.deltaTime);
         transform.position = newPos;
 
         if (Mathf.Abs(newPos.x - startPosition.x) > patrolRange)

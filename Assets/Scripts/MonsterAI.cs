@@ -178,6 +178,7 @@ public class MonsterAI : BaseCharater
     protected override void Die()
     {
         OnDeath?.Invoke();
+        ChangeState(State.Be_Attacked);
         base.Die();
     }
 

@@ -21,16 +21,14 @@ public class BaseCharater : MonoBehaviour
     public virtual void Attack(BaseCharater target)
     {
         target.TakeDamage(this.Atk);
-        ChangeState(State.Attack);
     }
     public virtual void TakeDamage(int damage)
     {
+        ChangeState(State.Be_Attacked);
         Debug.Log("TakeDamage");
         //if (attack_delay <= 0f) return;
         //  attack_delay = 3f;
          HP -= damage;
-        
-        ChangeState(State.Be_Attacked);
 
         if(HP <= 0)
         {
@@ -40,20 +38,17 @@ public class BaseCharater : MonoBehaviour
 
     protected virtual void Die()
     {
-        ChangeState(State.Die);
         Debug.Log($"{gameObject.name} Die");
 
-        GetComponent<Collider2D>().enabled = false;
+        //GetComponent<Collider2D>().enabled = false;
         this.enabled = false;
         //DropItem();
         // 3. 일정 시간 후 오브젝트 제거
         //Destroy(gameObject, 1.5f);
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     public virtual void ChangeState(State newState)
     {
-        CurrentState = newState;
-
         switch (newState)
         {
             case State.Idle:

@@ -20,7 +20,6 @@ public class PlayerController : BaseCharater
     [SerializeField] private float CurrentNoiseLevel = 0;
     [SerializeField] private float RunForce = 20.0f;
     [SerializeField] private float RunMaxSpeed = 4.0f;
-    [SerializeField] private float AttackRange = 2f;
     [SerializeField] private Transform attackOrigin;
     [SerializeField] private Vector2 boxSize = new Vector2(1.5f, 1f);
     [SerializeField] private float attackRangeX = 1.0f;
@@ -33,6 +32,8 @@ public class PlayerController : BaseCharater
     public event Action OpenGameOverPanel;
 
     private bool IsHide = false;
+    private bool canAttack = true;
+
 
 
     // Start is called before the first frame update
@@ -77,9 +78,6 @@ public class PlayerController : BaseCharater
 
     public override void ChangeState(State newState)
     {
-        if (CurrentState == newState)
-            return;
-
         CurrentState = newState;
         // 하위 클래스에서 override 가능
 
@@ -95,7 +93,7 @@ public class PlayerController : BaseCharater
                 base.animator.SetFloat("Speed", 1.0f);
                 break;
             case State.Jump:
-                base.animator.SetBool("IsJumping", true);
+                base.animator.SetTrigger("Jump");
                 break;
             case State.Die:
                 base.animator.SetTrigger("Die");
@@ -141,16 +139,12 @@ public class PlayerController : BaseCharater
         base.animator.SetFloat("Speed", normalizedSpeed);
     }
 
-    void FixedUpdate()
-    {
-        bool grounded = IsGrounded();
-        animator.SetBool("IsJumping", !grounded);  // 땅에 있으면 false, 공중이면 true
-    }
     void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
         {
             this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
+            animator.ResetTrigger("Jump");
             ChangeState(State.Jump);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -160,10 +154,10 @@ public class PlayerController : BaseCharater
         }
         else if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
-            Vector2 origin = Rigid2D.position;
+            Vector2 origin = Rigid2D.position + new Vector2(-3f, 0);
 
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
-            Debug.DrawRay(Rigid2D.position, Vector2.right * 3f, Color.green);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 6f, LayerMask.GetMask("Interactive_object"));
+            Debug.DrawRay(origin, Vector2.right * 6f, Color.green);
 
             if (hit)
             {
@@ -174,8 +168,9 @@ public class PlayerController : BaseCharater
                     ob.OnInteractive();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Z)) //공격
+        else if (Input.GetKeyDown(KeyCode.Z) && canAttack) //공격
         {
+            StartCoroutine(AttackRoutine());
             ChangeState(State.Attack);
             // 공격, 스턴건
             // 만약 손에 스턴건이 있으면 스턴건 발사
@@ -183,6 +178,19 @@ public class PlayerController : BaseCharater
             //if(inventoryempty)
             PerformAttack();
         }
+    }
+    System.Collections.IEnumerator AttackRoutine()
+    {
+        canAttack = false;
+
+        base.animator.ResetTrigger("IsAttacking");
+        ChangeState(State.Attack);
+        PerformAttack();
+
+        float attackDuration = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(attackDuration); //애니메이션에 따라 딜레이
+
+        canAttack = true;
     }
     bool IsGrounded()
     {
@@ -224,12 +232,14 @@ public class PlayerController : BaseCharater
 
     protected override void Die()
     {
+        ChangeState(State.Die);
         base.Die();
         OpenGameOverPanel?.Invoke();
     }
 
     public override void TakeDamage(int damage)
     {
+        base.ChangeState(State.Be_Attacked);
         base.TakeDamage(damage);
         UpdateHP?.Invoke(this.HP);
     }
