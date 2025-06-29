@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,16 +12,17 @@ public class NoiseLevelUI : MonoBehaviour
     private PlayerController player; // 
     [SerializeField]
     private KliierAI killer;
-    // // PlayerController¿¡¼­ ¼³Á¤ÇÒ °Í
+    // // PlayerControllerì—ì„œ ì„¤ì •í•  ê²ƒ
 
     private void Start()
     {
-        player.GetPlayerTransform += StartChase;
+        player.GetNoisePos += StartChase;
     }
 
-    private void StartChase(Transform playerTransform)
+    private void StartChase(Transform NoisePos)
     {
-        killer.ChasePlayer(playerTransform); // KillerAI¿¡¼­ ÇØ´ç À§Ä¡·Î ¹Ù·Î ÀÌµ¿ÇÏ´Â ÇÔ¼ö¸¦ ¸¸µé¾î¾ß ÇÔ;
+        Debug.Log("!!!");
+        killer.ChasePlayer(NoisePos); // KillerAIì—ì„œ í•´ë‹¹ ìœ„ì¹˜ë¡œ ë°”ë¡œ ì´ë™í•˜ëŠ” í•¨ìˆ˜ë¥¼ ë§Œë“¤ì–´ì•¼ í•¨;
     }
     private void LateUpdate()
     {

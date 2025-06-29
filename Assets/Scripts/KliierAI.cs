@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
@@ -22,7 +22,7 @@ public class KliierAI : BaseCharater
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttack = false;
-    private bool isFullNoiseLevel = false;
+    private bool isNoiseEvent = false;
 
     void Start()
     {
@@ -35,29 +35,29 @@ public class KliierAI : BaseCharater
 
     void Update()
     {
-        if (isFullNoiseLevel)
+        if (isNoiseEvent)
+            Chase();
+        else
         {
-            Chase();
-            return;
+            DetectPlayer();
+
+            if (isChasing && player != null)
+                Chase();
+            else if (!isWaiting)
+                Patrol();
+
+            if (!isAttack)
+                StartCoroutine(AttackPlayer());
         }
-        DetectPlayer();
-
-        if (isChasing && player != null)
-            Chase();
-        else if (!isWaiting)
-            Patrol();
-
-        if (!isAttack)
-            StartCoroutine(AttackPlayer());
+            
     }
 
-
-    public void ChasePlayer(Transform noiseTransform)
+    public void ChasePlayer(Transform NoisePos)
     {
-        player = noiseTransform;
-        isFullNoiseLevel = true;
-        Chase();
+        player = NoisePos;
+        isNoiseEvent = true;
     }
+
     void DetectPlayer()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, findRange, playerLayer);
@@ -75,7 +75,7 @@ public class KliierAI : BaseCharater
         {
             if (isChasing)
             {
-                // ÇÃ·¹ÀÌ¾î¸¦ ³õÃÆ´Ù¸é ÃßÀû Áß´Ü
+                // í”Œë ˆì´ì–´ë¥¼ ë†“ì³¤ë‹¤ë©´ ì¶”ì  ì¤‘ë‹¨
                 isChasing = false;
                 player = null;
             }
@@ -94,12 +94,12 @@ public class KliierAI : BaseCharater
         yield return new WaitForSeconds(2f);
     }
 
-    void Patrol() //¼øÂû
+    void Patrol() //ìˆœì°°
     {
         float direction = isMovingRight ? 1f : -1f;
         Vector3 newPos = transform.position + Vector3.right * direction * Speed * Time.deltaTime;
 
-        // Y °íÁ¤
+        // Y ê³ ì •
         newPos.y = startPosition.y;
         transform.position = newPos;
 
@@ -113,14 +113,14 @@ public class KliierAI : BaseCharater
     {
         if (player == null) return;
 
-        
-        if (isFullNoiseLevel)
+        if (isNoiseEvent) // ë…¸ì´ì¦ˆ ì´ë²¤íŠ¸, ì¦‰ ì†ŒìŒê²Œì´ì§€ê°€ 100ì¼ ë•Œ ë°œìƒ.
         {
-            if(transform.position == player.position)
+            if (Vector3.Distance(transform.position, player.position) < 10f)
             {
-                isFullNoiseLevel = false;
+                isNoiseEvent = false;
                 return;
             }
+
             transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
             float direction = player.position.x - transform.position.x;
             FlipSprite(direction);

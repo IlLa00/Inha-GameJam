@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
@@ -28,7 +29,9 @@ public class PlayerController : BaseCharater
     Rigidbody2D Rigid2D;
 
     public event Action<int> UpdateHP;
-    public event Action<Transform> GetPlayerTransform;
+    public event Action<Transform> GetNoisePos;
+
+    private bool IsHide = false;
 
     // Start is called before the first frame update
     void Start()
@@ -56,10 +59,7 @@ public class PlayerController : BaseCharater
 
         if(CurrentNoiseLevel >= NoiseLevel)
         {
-            // 쵸비상메세지를 센터한테보내고 센터는 이걸 받아서 살인마한테 야 저새기 저깃다 가라 <- 객체지향적
-            // 살인마는 그럼 플레이어를 안다 <- 객체지향에 위배가 약간 될수도있음
-            // 센터한테 함수를 보내는데 이 함수에는 플레이어 위치를 보내요 센터는 그걸듣고 살인마한테 받은 플레이어위치를 보낸다
-            GetPlayerTransform?.Invoke(this.transform);
+            GetNoisePos?.Invoke(this.transform);
             CurrentNoiseLevel = 0;
         }
     }
@@ -110,8 +110,8 @@ public class PlayerController : BaseCharater
         HandleInput();
 
         int key = 0;
-        if (Input.GetKey(KeyCode.RightArrow)) { key = 1; }
-        if (Input.GetKey(KeyCode.LeftArrow)) { key = -1; }
+        if (Input.GetKey(KeyCode.RightArrow) && !IsHide) { key = 1; }
+        if (Input.GetKey(KeyCode.LeftArrow) && !IsHide) { key = -1; }
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift); //달리는지 확인 후 현재 force를 계산함
         float currentForce = isRunning ? RunForce : WalkForce;
@@ -143,17 +143,30 @@ public class PlayerController : BaseCharater
     }
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
+        if(!IsHide)
         {
-            this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
-            ChangeState(State.Jump);
+            if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
+            {
+                this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
+                ChangeState(State.Jump);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                //플랫포머 내려오기?
+                ChangeState(State.Jump);
+            }
+            else if (Input.GetKeyDown(KeyCode.Z)) //공격
+            {
+                ChangeState(State.Attack);
+                // 공격, 스턴건
+                // 만약 손에 스턴건이 있으면 스턴건 발사
+                // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
+                //if(inventoryempty)
+                PerformAttack();
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            //플랫포머 내려오기?
-            ChangeState(State.Jump);
-        }
-        else if (Input.GetKeyDown(KeyCode.F)) //상호작용
+       
+        if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
             Vector2 origin = Rigid2D.position;
 
@@ -169,16 +182,8 @@ public class PlayerController : BaseCharater
                     ob.OnInteractive();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Z)) //공격
-        {
-            ChangeState(State.Attack);
-            // 공격, 스턴건
-            // 만약 손에 스턴건이 있으면 스턴건 발사
-            // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
-            //if(inventoryempty)
-            PerformAttack();
-        }
     }
+
     bool IsGrounded()
     {
         float rayOffsetY = -0.5f; // 필요에 따라 조정
@@ -222,5 +227,24 @@ public class PlayerController : BaseCharater
         this.gameObject.SetActive(false);
         
         base.Die();
+    }
+
+    public void OnHide()
+    {
+        // 시야각 처리
+        IsHide = true;
+
+        Renderer playerRenderer = GetComponent<Renderer>();
+        if (playerRenderer != null)
+            playerRenderer.enabled = false; // 렌더링만 끔
+    }
+
+    public void OffHide()
+    {
+        IsHide = false;
+
+        Renderer playerRenderer = GetComponent<Renderer>();
+        if (playerRenderer != null)
+            playerRenderer.enabled = true; 
     }
 }

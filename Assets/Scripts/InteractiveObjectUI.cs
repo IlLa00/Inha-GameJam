@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class InteractiveObjectUI : MonoBehaviour
 {
-    [SerializeField] private Generator generator;
+    [SerializeField] private InteractiveObject interactiveobject;
     [SerializeField] private GameObject InteractiveUI;
 
     void Start()
     {
-        if (generator == null) return;
+        if (interactiveobject == null) return;
         if (InteractiveUI == null) return;
 
         Vector3 generatorWorldPosition = transform.position;
@@ -20,7 +20,7 @@ public class InteractiveObjectUI : MonoBehaviour
 
     void Update()
     {
-        if (generator.CanInteract())
+        if (interactiveobject.CanInteract())
             InteractiveUI.SetActive(true);
         else
             InteractiveUI.SetActive(false);
