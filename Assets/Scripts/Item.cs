@@ -6,6 +6,7 @@ public abstract class Item : MonoBehaviour
     public Sprite Itemicon;
     private string Itemname;
     protected bool isDropped = false;
+    public PlayerController Owner;
 
     public virtual void Initialize(string name, Sprite icon)
     {

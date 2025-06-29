@@ -12,9 +12,12 @@ public class Inventory : MonoBehaviour
     public event Action AddInventoryUI;
     public event Action UseInventoryUI;
 
+    [SerializeField] public PlayerController Owner;
+
     void Start()
     {
-        
+        if (Owner == null)
+            return;
     }
 
     void Update()
@@ -38,7 +41,7 @@ public class Inventory : MonoBehaviour
                 return;
             }
         }
-
+        item.Owner = Owner;
         // 새로운 아이템 추가
         items.Add(new KeyValuePair<Item, int>(item, 1));
         AddInventoryUI?.Invoke();
