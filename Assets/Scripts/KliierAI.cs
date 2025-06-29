@@ -1,63 +1,61 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class KliierAI : BaseCharater
 {
-    public float patrolRange = 10f;
+    public float patrolRange = 10f; // ∞®¡ˆ ∞≈∏Æ ∏ ∏∏≈≠¿∏∑Œ πŸ≤„æﬂ«‘
     public float findRange = 5f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
-    public float chaseSpeed = 3.5f;
+    public float chaseSpeed = 4.0f;
     public float waitBeforeChase = 1f;
 
     public float attackrangeX = 1.0f;
-    public float attackrangeY = 1.0f;
     private Transform attakOrigin;
-    private Vector2 boxsize = new Vector2(0.8f, 1f);
     private Vector3 startPosition;
 
     private bool isMovingRight = true;
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttack = false;
-    private bool isFullNoiseLevel = false;
+    private bool isNoiseEvent = false;
 
     void Start()
     {
         startPosition = transform.position;
-        base.Speed = 2f;
+        base.Speed = 3f;
         base.Atk = 5;
         base.animator = GetComponent<Animator>();
-        base.HP = 100;
+        base.HP = 1000;
     }
 
     void Update()
     {
-        if (isFullNoiseLevel)
+        if (isNoiseEvent)
+            Chase();
+        else
         {
-            Chase();
-            return;
+            DetectPlayer();
+
+            if (isChasing && player != null)
+                Chase();
+            else if (!isWaiting)
+                Patrol();
+
+            if (!isAttack)
+                StartCoroutine(AttackPlayer());
         }
-        DetectPlayer();
-
-        if (isChasing && player != null)
-            Chase();
-        else if (!isWaiting)
-            Patrol();
-
-        if (!isAttack)
-            StartCoroutine(AttackPlayer());
+            
     }
 
-
-    public void ChasePlayer(Transform noiseTransform)
+    public void ChasePlayer(Transform NoisePos)
     {
-        player = noiseTransform;
-        isFullNoiseLevel = true;
-        Chase();
+        player = NoisePos;
+        isNoiseEvent = true;
     }
+
     void DetectPlayer()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, findRange, playerLayer);
@@ -75,7 +73,7 @@ public class KliierAI : BaseCharater
         {
             if (isChasing)
             {
-                // «√∑π¿ÃæÓ∏¶ ≥ı√∆¥Ÿ∏È √ﬂ¿˚ ¡ﬂ¥‹
+                // ÌîåÎ†àÏù¥Ïñ¥Î•º ÎÜìÏ≥§Îã§Î©¥ Ï∂îÏ†Å Ï§ëÎã®
                 isChasing = false;
                 player = null;
             }
@@ -88,18 +86,13 @@ public class KliierAI : BaseCharater
         isChasing = true;
         isWaiting = false;
     }
-    System.Collections.IEnumerator AttackPlayer()
-    {
-        Vector2 offset = new Vector2(transform.localScale.x > 0 ? attackrangeX : -attackrangeX, 0);
-        yield return new WaitForSeconds(2f);
-    }
 
-    void Patrol() //º¯¬˚
+    void Patrol() //ÏàúÏ∞∞
     {
         float direction = isMovingRight ? 1f : -1f;
         Vector3 newPos = transform.position + Vector3.right * direction * Speed * Time.deltaTime;
 
-        // Y ∞Ì¡§
+        // Y Í≥†Ï†ï
         newPos.y = startPosition.y;
         transform.position = newPos;
 
@@ -113,14 +106,14 @@ public class KliierAI : BaseCharater
     {
         if (player == null) return;
 
-        
-        if (isFullNoiseLevel)
+        if (isNoiseEvent) // ÎÖ∏Ïù¥Ï¶à Ïù¥Î≤§Ìä∏, Ï¶â ÏÜåÏùåÍ≤åÏù¥ÏßÄÍ∞Ä 100Ïùº Îïå Î∞úÏÉù.
         {
-            if(transform.position == player.position)
+            if (Vector3.Distance(transform.position, player.position) < 10f)
             {
-                isFullNoiseLevel = false;
+                isNoiseEvent = false;
                 return;
             }
+
             transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
             float direction = player.position.x - transform.position.x;
             FlipSprite(direction);
@@ -135,6 +128,22 @@ public class KliierAI : BaseCharater
                   
     }
 
+    System.Collections.IEnumerator AttackPlayer()
+    {
+        float Radius = 1.5f;
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, Radius);
+
+        if (hit != null && hit.CompareTag("Player"))
+        {
+            isAttack = true;
+            ChangeState(State.Attack);
+            base.Attack(hit.GetComponent<PlayerController>());
+            yield return new WaitForSecondsRealtime(5f);
+            isAttack = false;
+        }
+
+    }
+
     void FlipSprite(float dir)
     {
         if (dir == 0) return;
@@ -147,6 +156,9 @@ public class KliierAI : BaseCharater
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, findRange);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, 1.5f);
     }
 
 }
