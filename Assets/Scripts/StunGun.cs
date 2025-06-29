@@ -2,12 +2,14 @@
 
 public class StunGun : Item
 {
-    public StunGun() : base("스턴건") {}
-
     private Camera playerCamera;
     private float range = 10f;                    
-    private float stunDuration = 3f;
     private LayerMask targetLayer = -1;
+
+    void Awake()
+    {
+        Initialize("Stun Gun", Resources.Load<Sprite>("StungunIcon"));
+    }
 
     void Start()
     {
@@ -21,7 +23,7 @@ public class StunGun : Item
         
     }
 
-    protected override void OnExecute()
+    public override void OnExecute()
     {
         FireStunGun();
     }

@@ -26,6 +26,7 @@ public class PlayerController : BaseCharater
     [SerializeField] private float attackRangeX = 1.0f;
     [SerializeField] private LayerMask Monster;
 
+    private Inventory inventory;
     Rigidbody2D Rigid2D;
 
     public event Action<int> UpdateHP;
@@ -44,6 +45,8 @@ public class PlayerController : BaseCharater
         this.HP = 10;
         this.Atk = 30;
         UpdateHP?.Invoke(this.HP);
+
+        inventory = GetComponent<Inventory>();
     }
 
     public float GetNoiseLevel()
@@ -61,9 +64,6 @@ public class PlayerController : BaseCharater
 
         if(CurrentNoiseLevel >= NoiseLevel)
         {
-            // 쵸비상메세지를 센터한테보내고 센터는 이걸 받아서 살인마한테 야 저새기 저깃다 가라 <- 객체지향적
-            // 살인마는 그럼 플레이어를 안다 <- 객체지향에 위배가 약간 될수도있음
-            // 센터한테 함수를 보내는데 이 함수에는 플레이어 위치를 보내요 센터는 그걸듣고 살인마한테 받은 플레이어위치를 보낸다
             GetPlayerTransform?.Invoke(this.transform);
             CurrentNoiseLevel = 0;
         }
@@ -180,8 +180,11 @@ public class PlayerController : BaseCharater
             // 공격, 스턴건
             // 만약 손에 스턴건이 있으면 스턴건 발사
             // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
-            //if(inventoryempty)
-            PerformAttack();
+            
+            if (inventory != null && inventory.IsInventoryEmpty())
+                PerformAttack();
+            else
+                inventory.UseItem();
         }
     }
     bool IsGrounded()

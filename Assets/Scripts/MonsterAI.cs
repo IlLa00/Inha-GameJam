@@ -1,10 +1,11 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.Progress;
 using static UnityEngine.UI.Image;
 
 public class MonsterAI : BaseCharater
@@ -28,6 +29,8 @@ public class MonsterAI : BaseCharater
     [SerializeField] private Vector2 boxsize = new Vector2(0.8f, 1f);
     [SerializeField] private LayerMask Player;
 
+    private StunGun stungun;
+
     private Transform player;
     private bool isPlayerDetected = false;
     private bool isChasing = false;
@@ -48,21 +51,21 @@ public class MonsterAI : BaseCharater
     // Update is called once per frame
     void Update()
     {
-        Sencing(); // °¨Áö
+        Sencing(); // ê°ì§€
 
         if (isChasing && player != null)
-            HandlChase(); // °¨ÁöµÇ¸é Ãß°İ
+            HandlChase(); // ê°ì§€ë˜ë©´ ì¶”ê²©
         else if(!isWaiting)
-            Patrol(); //¼øÂû
+            Patrol(); //ìˆœì°°
 
         if(isAttack == false)
             StartCoroutine(IsOnAttackPlayer());
     }
-    void Patrol() //raycast·Î ¶¥ position 
+    void Patrol() //raycastë¡œ ë•… position 
     {
         base.ChangeState(State.Walk);
         Vector2 groundCheckPos = new Vector3(transform.position.x + (isMovingRight ? offsetX : -offsetX), transform.position.y);
-        RaycastHit2D groundInfo = Physics2D.Raycast(groundCheckPos, Vector2.down, GroundCheckDistance, GroundLayer); //·¹ÀÌ¸¦ ¹ß¹ØÀ¸·Î ½ğ´Ù
+        RaycastHit2D groundInfo = Physics2D.Raycast(groundCheckPos, Vector2.down, GroundCheckDistance, GroundLayer); //ë ˆì´ë¥¼ ë°œë°‘ìœ¼ë¡œ ìœë‹¤
         if(!groundInfo.collider)
         {
             flip();
@@ -70,7 +73,7 @@ public class MonsterAI : BaseCharater
 
         Rigid2D.velocity = new Vector2((isMovingRight ? 1 : -1) * Speed, Rigid2D.velocity.y);
     }
-    void flip() // ¹æÇâ ¹Ù²Ù´Â ÇÔ¼ö
+    void flip() // ë°©í–¥ ë°”ê¾¸ëŠ” í•¨ìˆ˜
     {
         isMovingRight = !isMovingRight;
 
@@ -83,7 +86,7 @@ public class MonsterAI : BaseCharater
         if (isPlayerDetected)
             return;
 
-        Vector2 boxSize = new Vector2(8f, 3f); // °¡·Î X, ¼¼·Î Y
+        Vector2 boxSize = new Vector2(8f, 3f); // ê°€ë¡œ X, ì„¸ë¡œ Y
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(0f, -0.1f);
 
         Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0f, PlayerLayer);
@@ -142,7 +145,7 @@ public class MonsterAI : BaseCharater
         isWaiting = true;
         Rigid2D.velocity = Vector2.zero;
         base.ChangeState(State.Idle);
-        yield return new WaitForSecondsRealtime(3f); // 3ÃÊ ´ë±â
+        yield return new WaitForSecondsRealtime(3f); // 3ì´ˆ ëŒ€ê¸°
 
         isChasing = true;
     }
@@ -168,7 +171,7 @@ public class MonsterAI : BaseCharater
     {
         Gizmos.color = Color.red;
 
-        // ¹Ú½º °¨Áö ½Ã
+        // ë°•ìŠ¤ ê°ì§€ ì‹œ
         Vector2 boxSize = new Vector2(8f, 3f);
         Vector2 boxCenter = transform.position + new Vector3(0f, -0.1f);
         Gizmos.DrawWireCube(boxCenter, boxSize);
@@ -178,6 +181,9 @@ public class MonsterAI : BaseCharater
     protected override void Die()
     {
         OnDeath?.Invoke();
+
+        DropItem();
+
         base.Die();
     }
 
@@ -190,11 +196,11 @@ public class MonsterAI : BaseCharater
 
         player = null;
 
-        // ÇÊ¿äÇÑ °æ¿ì Ã¼·Â ÃÊ±âÈ­
+        // í•„ìš”í•œ ê²½ìš° ì²´ë ¥ ì´ˆê¸°í™”
         base.HP = 1;
         this.enabled = true;
 
-        // Rigidbody¿Í Äİ¶óÀÌ´õ°¡ ²¨Á® ÀÖ¾úÀ» °æ¿ì ´ëºñ
+        // Rigidbodyì™€ ì½œë¼ì´ë”ê°€ êº¼ì ¸ ìˆì—ˆì„ ê²½ìš° ëŒ€ë¹„
         GetComponent<Rigidbody2D>().simulated = true;
 
         var col = GetComponent<Collider2D>();
@@ -202,6 +208,13 @@ public class MonsterAI : BaseCharater
             col.enabled = true;
 
         if (animator != null)
-            animator.Rebind();  // ¾Ö´Ï¸ŞÀÌÅÍ ÃÊ±âÈ­
+            animator.Rebind();  // ì• ë‹ˆë©”ì´í„° ì´ˆê¸°í™”
+    }
+
+    void DropItem()
+    {
+        GameObject stungun = new GameObject("Stungun");
+        stungun.transform.position = transform.position;
+        stungun.AddComponent<StunGun>().SetAsDroppedItem();
     }
 }

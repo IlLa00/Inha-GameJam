@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
         
     }
 
-    void AddItem(Item item)
+    public void AddItem(Item item)
     {
         for (int i = 0; i < items.Count; i++)
         {
@@ -36,7 +36,7 @@ public class Inventory : MonoBehaviour
         Debug.Log($"{item.name} 새로 추가됨. 수량: 1");
     }
 
-    void UseItem()
+    public void UseItem()
     {
         if (CurrentItemIndex < 0 || CurrentItemIndex >= items.Count)
             return;
@@ -48,20 +48,16 @@ public class Inventory : MonoBehaviour
 
         Debug.Log($"{currentItem.Key} 사용!");
 
-        //items[CurrentItemIndex].OnEx
+        items[CurrentItemIndex].Key.OnExecute(); // 아이템 사용!!
 
-        // 수량 감소
         int newQuantity = currentItem.Value - 1;
-
         if (newQuantity <= 0)
         {
-            // 수량이 0이 되면 리스트에서 제거
             items.RemoveAt(CurrentItemIndex);
             Debug.Log($"{currentItem.Key}이(가) 모두 소모되어 인벤토리에서 제거되었습니다.");
         }
         else
         {
-            // 수량만 업데이트
             items[CurrentItemIndex] = new KeyValuePair<Item, int>(currentItem.Key, newQuantity);
             Debug.Log($"{currentItem.Key} 사용 완료. 남은 수량: {newQuantity}");
         }
