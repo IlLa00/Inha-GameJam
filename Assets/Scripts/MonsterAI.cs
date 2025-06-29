@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +26,8 @@ public class MonsterAI : BaseCharater
     private bool isChasing = false;
     private bool isWaiting = false;
 
+    [SerializeField] private GameObject stungun;
+
     void Start()
     {
         Rigid2D = GetComponent<Rigidbody2D>();
@@ -38,15 +40,15 @@ public class MonsterAI : BaseCharater
     // Update is called once per frame
     void Update()
     {
-        Sencing(); // ∞®¡ˆ
+        Sencing(); // Í∞êÏßÄ
 
         if (isChasing && player != null)
             HandlChase();
         else if(!isWaiting)
-            Patrol(); //º¯¬˚
+            Patrol(); //ÏàúÏ∞∞
 
     }
-    void Patrol() //raycast∑Œ ∂• position 
+    void Patrol() //raycastÎ°ú ÎïÖ position 
     {
         RaycastHit2D groundInfo = Physics2D.Raycast(GroundCheck.position, Vector2.down, GroundCheckDistance, GroundLayer);
         if(!groundInfo.collider)
@@ -68,7 +70,7 @@ public class MonsterAI : BaseCharater
         if (isPlayerDetected)
             return;
 
-        Vector2 boxSize = new Vector2(8f, 3f); // ∞°∑Œ X, ºº∑Œ Y
+        Vector2 boxSize = new Vector2(8f, 3f); // Í∞ÄÎ°ú X, ÏÑ∏Î°ú Y
         Vector2 boxCenter = (Vector2)transform.position + new Vector2(0f, -0.1f);
 
         Collider2D hit = Physics2D.OverlapBox(boxCenter, boxSize, 0f, PlayerLayer);
@@ -102,7 +104,7 @@ public class MonsterAI : BaseCharater
     {
         isWaiting = true;
         Rigid2D.velocity = Vector2.zero;
-        yield return new WaitForSecondsRealtime(3f); // 3√  ¥Î±‚
+        yield return new WaitForSecondsRealtime(3f); // 3Ï¥à ÎåÄÍ∏∞
 
         isChasing = true;
     }
@@ -111,9 +113,16 @@ public class MonsterAI : BaseCharater
     {
         Gizmos.color = Color.red;
 
-        // π⁄Ω∫ ∞®¡ˆ Ω√
+        // Î∞ïÏä§ Í∞êÏßÄ Ïãú
         Vector2 boxSize = new Vector2(8f, 3f);
         Vector2 boxCenter = transform.position + new Vector3(0f, -0.1f);
         Gizmos.DrawWireCube(boxCenter, boxSize);
+    }
+
+    private void DropItem()
+    {
+        if (stungun == null) return;
+
+        GameObject dropitem = Instantiate(stungun,transform.position, Quaternion.identity);
     }
 }

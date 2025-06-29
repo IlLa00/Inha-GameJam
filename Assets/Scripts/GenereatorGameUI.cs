@@ -7,7 +7,7 @@ public class GeneratorGameUI : MonoBehaviour
     [SerializeField] private RectTransform successZone;
     [SerializeField] private Generator generator;
 
-    [SerializeField] private float sliderSpeed = 1f;
+    [SerializeField] private float sliderSpeed = 0.3f;
 
     private float SuccessZoneMin;
     private float SuccessZoneMax;

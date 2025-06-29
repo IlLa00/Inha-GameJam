@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Generator : InteractiveObject
 {
@@ -47,6 +48,9 @@ public class Generator : InteractiveObject
         {
             // Debug.Log("Generateor OnInteracting");
 
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.red;
+
             // 발전기 게이지 상승
             CurrentProgress += 0.05f * Time.deltaTime;
             CurrentProgress = Mathf.Clamp(CurrentProgress, 0f, MaxProgress);
@@ -66,6 +70,12 @@ public class Generator : InteractiveObject
                 IsRepairing = false;
                 IsPlayingGame = false;
             }
+        }
+
+        if(!IsRepair())
+        {
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.white;
         }
     }
 
