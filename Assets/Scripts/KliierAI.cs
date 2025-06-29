@@ -12,7 +12,7 @@ public class KliierAI : BaseCharater
     [SerializeField] private LayerMask playerLayer;
     public float chaseSpeed = 4.0f;
     public float waitBeforeChase = 1f;
-    private float patrolYRange = 1.5f;
+    private float patrolYRange = 20.5f;
     private float yUpdateInterval = 2f;
     private float nextYUpdateTime = 0f;
     private float targetY;
