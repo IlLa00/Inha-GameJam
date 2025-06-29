@@ -17,7 +17,8 @@ public class BaseCharater : MonoBehaviour
     public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked,};
     protected State CurrentState;
 
-    public virtual void Move() { }
+    float attack_delay = 3f;
+
     public virtual void Attack(BaseCharater target)
     {
         target.TakeDamage(this.Atk);
@@ -25,7 +26,11 @@ public class BaseCharater : MonoBehaviour
     }
     public virtual void TakeDamage(int damage)
     {
-        HP -= damage;
+        Debug.Log("TakeDamage");
+        //if (attack_delay <= 0f) return;
+        //  attack_delay = 3f;
+         HP -= damage;
+        
         ChangeState(State.Be_Attacked);
 
         if(HP <= 0)
@@ -36,8 +41,14 @@ public class BaseCharater : MonoBehaviour
 
     protected virtual void Die()
     {
-        CurrentState = State.Die;
+        ChangeState(State.Die);
         Debug.Log($"{gameObject.name} Die");
+
+        GetComponent<Collider2D>().enabled = false;
+        this.enabled = false;
+        //DropItem();
+        // 3. 일정 시간 후 오브젝트 제거
+        Destroy(gameObject, 1.5f);
     }
     public virtual void ChangeState(State newState)
     {
@@ -45,7 +56,6 @@ public class BaseCharater : MonoBehaviour
             return;
 
         CurrentState = newState;
-        // 하위 클래스에서 override 가능
 
         switch (newState)
         {
@@ -53,7 +63,7 @@ public class BaseCharater : MonoBehaviour
                 animator.SetFloat("Speed", 0);
                 break;
             case State.Walk:
-                animator.SetFloat("Speed", 0.5f);
+                animator.SetFloat("Speed", 0.1f);
                 break;
             case State.Be_Attacked:
                 animator.SetTrigger("be_Attacked");

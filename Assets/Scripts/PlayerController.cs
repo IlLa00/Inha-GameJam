@@ -4,24 +4,26 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
+using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UI.Image;
 
 public class PlayerController : BaseCharater
 {
-    [SerializeField]
-    private float WalkForce = 10.0f;
-    [SerializeField]
-    private float JumpForce = 5.0f;
-    [SerializeField]
-    private float MaxSpeed = 2.0f;
-    [SerializeField]
-    private float NoiseLevel = 100;
-    [SerializeField]
-    private float CurrentNoiseLevel = 0;
-    [SerializeField]
-    private float RunForce = 20.0f;
-    [SerializeField]
-    private float RunMaxSpeed = 4.0f;
+    //[Serialized] private Inventory inventory;
+    //void UseItem() { if (inventory == null) return; inventory.Use(); }
+
+    [SerializeField] private float WalkForce = 10.0f;
+    [SerializeField] private float JumpForce = 5.0f;
+    [SerializeField] private float MaxSpeed = 2.0f;
+    [SerializeField] private float NoiseLevel = 100;
+    [SerializeField] private float CurrentNoiseLevel = 0;
+    [SerializeField] private float RunForce = 20.0f;
+    [SerializeField] private float RunMaxSpeed = 4.0f;
+    [SerializeField] private float AttackRange = 2f;
+    [SerializeField] private Transform attackOrigin;
+    [SerializeField] private Vector2 boxSize = new Vector2(1.5f, 1f);
+    [SerializeField] private float attackRangeX = 1.0f;
+    [SerializeField] private LayerMask Monster;
 
     Rigidbody2D Rigid2D;
 
@@ -81,10 +83,10 @@ public class PlayerController : BaseCharater
                 base.animator.SetFloat("Speed", 0);
                 break;
             case State.Walk:
-                base.animator.SetFloat("Speed", 0.1f);
+                base.animator.SetFloat("Speed", 0.5f);
                 break;
             case State.Run:
-                base.animator.SetFloat("Speed", 0.6f);
+                base.animator.SetFloat("Speed", 1.0f);
                 break;
             case State.Jump:
                 base.animator.SetBool("IsJumping", true);
@@ -93,7 +95,7 @@ public class PlayerController : BaseCharater
                 base.animator.SetTrigger("Die");
                 break;
             case State.Attack:
-                base.animator.SetTrigger("Attack");
+                base.animator.SetTrigger("IsAttacking");
                 break;
             case State.Be_Attacked:
                 base.animator.SetTrigger("be_Attacked");
@@ -150,12 +152,12 @@ public class PlayerController : BaseCharater
             //플랫포머 내려오기?
             ChangeState(State.Jump);
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
             Vector2 origin = Rigid2D.position + new Vector2(10, 0);
 
             RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.right, 3f, LayerMask.GetMask("Interactive_object"));
-            Debug.DrawRay(origin, Vector2.right * 3f, Color.green);
+            Debug.DrawRay(Rigid2D.position, Vector2.right * 3f, Color.green);
 
             if (hit)
             {
@@ -165,7 +167,15 @@ public class PlayerController : BaseCharater
                 if(ob.CanInteract())
                     ob.OnInteractive();
             }
-
+        }
+        else if (Input.GetKeyDown(KeyCode.Z)) //공격
+        {
+            ChangeState(State.Attack);
+            // 공격, 스턴건
+            // 만약 손에 스턴건이 있으면 스턴건 발사
+            // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
+            //if(inventoryempty)
+            PerformAttack();
         }
     }
     bool IsGrounded()
@@ -178,5 +188,31 @@ public class PlayerController : BaseCharater
         Debug.DrawRay(origin, Vector2.down * rayLength, Color.green);
 
         return hit.collider != null;
+    }
+
+    void PerformAttack()
+    {
+        Vector2 offset = new Vector2(transform.localScale.x > 0 ? attackRangeX : -attackRangeX, 0);
+        Vector2 attackPoint = (Vector2)attackOrigin.position + offset;
+
+        Collider2D hit = Physics2D.OverlapBox(attackPoint, boxSize, 0f, Monster);
+        if(hit != null && hit.CompareTag("Enemy"))
+        {
+            base.Attack(hit.GetComponent<MonsterAI>());
+        }
+
+        
+        Debug.DrawLine(attackPoint - boxSize * 0.5f, attackPoint + boxSize * 0.5f, Color.red, 0.1f);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackOrigin == null) return;
+
+        Vector2 offset = new Vector2(transform.localScale.x > 0 ? attackRangeX : -attackRangeX, 0);
+        Vector2 attackPoint = (Vector2)attackOrigin.position + offset;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(attackPoint, boxSize);
     }
 }

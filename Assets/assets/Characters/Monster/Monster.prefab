@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 143560001407715173}
   - component: {fileID: 564984703072314080}
   - component: {fileID: -5164236417680849150}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -201,8 +201,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   GroundCheckDistance: 1
+  offsetX: 0.5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 8
   FindRange: 5
   RunSpeed: 2
+  AttackRange: 1.5
+  attackrangeX: 1
+  attakOrigin: {fileID: 6026715785121612065}
+  boxsize: {x: 0.8, y: 1}
+  Player:
+    serializedVersion: 2
+    m_Bits: 8

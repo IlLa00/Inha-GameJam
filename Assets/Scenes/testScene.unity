@@ -763,6 +763,13 @@ MonoBehaviour:
   CurrentNoiseLevel: 0
   RunForce: 20
   RunMaxSpeed: 4
+  AttackRange: 2
+  attackOrigin: {fileID: 1852744463}
+  boxSize: {x: 1.5, y: 1}
+  attackRangeX: 1
+  Monster:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &573737045813689976
 PrefabInstance:
   m_ObjectHideFlags: 0

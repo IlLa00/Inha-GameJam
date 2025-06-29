@@ -5,19 +5,23 @@ using UnityEngine;
 public class KliierAI : BaseCharater
 {
     public float patrolRange = 10f;
-
     public float findRange = 5f;
-     [SerializeField] private LayerMask playerLayer;
-
+    private Transform player;
+    [SerializeField] private LayerMask playerLayer;
     public float chaseSpeed = 3.5f;
     public float waitBeforeChase = 1f;
 
+    public float attackrangeX = 1.0f;
+    public float attackrangeY = 1.0f;
+    private Transform attakOrigin;
+    private Vector2 boxsize = new Vector2(0.8f, 1f);
     private Vector3 startPosition;
-    private bool isMovingRight = true;
 
+    private bool isMovingRight = true;
     private bool isChasing = false;
     private bool isWaiting = false;
-    private Transform player;
+    private bool isAttack = false;
+    
 
     void Start()
     {
@@ -36,6 +40,9 @@ public class KliierAI : BaseCharater
             Chase();
         else if (!isWaiting)
             Patrol();
+
+        if (!isAttack)
+            StartCoroutine(AttackPlayer());
     }
 
     void DetectPlayer()
@@ -67,6 +74,11 @@ public class KliierAI : BaseCharater
         yield return new WaitForSeconds(waitBeforeChase);
         isChasing = true;
         isWaiting = false;
+    }
+    System.Collections.IEnumerator AttackPlayer()
+    {
+        Vector2 offset = new Vector2(transform.localScale.x > 0 ? attackrangeX : -attackrangeX, 0);
+        yield return new WaitForSeconds(2f);
     }
 
     void Patrol() //¼øÂû
@@ -108,4 +120,5 @@ public class KliierAI : BaseCharater
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, findRange);
     }
+
 }
