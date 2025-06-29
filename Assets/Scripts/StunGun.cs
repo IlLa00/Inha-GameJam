@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class StunGun : Item
 {
-    public StunGun() : base("스턴건") {}
-
     private Camera playerCamera;
     private float range = 10f;                    
-    private float stunDuration = 3f;
     private LayerMask targetLayer = -1;
+
+    void Awake()
+    {
+        Initialize("Stun Gun", Resources.Load<Sprite>("StunGun"));
+
+    }
 
     void Start()
     {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        renderer.sprite = Itemicon;
+        renderer.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+
         playerCamera = Camera.main;
         if (playerCamera == null)
             playerCamera = FindObjectOfType<Camera>();
@@ -21,7 +29,7 @@ public class StunGun : Item
         
     }
 
-    protected override void OnExecute()
+    public override void OnExecute()
     {
         FireStunGun();
     }
