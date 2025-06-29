@@ -1309,9 +1309,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneBGMs:
-  - sceneName: "\uB85C\uBE44"
+  - sceneName: Lobby
     bgmClip: {fileID: 8300000, guid: 40869972fba06ce44a1a024fdf908f9f, type: 3}
-  - sceneName: "\uC778\uAC8C\uC784"
+  - sceneName: InGame
     bgmClip: {fileID: 8300000, guid: 40869972fba06ce44a1a024fdf908f9f, type: 3}
   volume: 0.5
 --- !u!4 &2113073875

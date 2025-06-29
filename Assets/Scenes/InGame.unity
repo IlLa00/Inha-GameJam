@@ -24204,7 +24204,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 42969424, guid: 977f7549256dea249ba2327e113df79d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -26168,7 +26168,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: -1835349645, guid: ccad9a3606a35314cbdc5693e9592043, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -29351,11 +29351,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2356206233137000636, guid: 7d94eb238a4571e40991d4fe4a938606, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -5.29
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2356206233137000636, guid: 7d94eb238a4571e40991d4fe4a938606, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.22
+      value: 8.1
       objectReference: {fileID: 0}
     - target: {fileID: 2356206233137000636, guid: 7d94eb238a4571e40991d4fe4a938606, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
