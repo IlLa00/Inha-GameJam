@@ -11,10 +11,7 @@ public class Obstacle : InteractiveObject
 
     void Update()
     {
-        if(IsHide)
-        {
-
-        }
+       
     }
 
     public override void OnInteractive()
