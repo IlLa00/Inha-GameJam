@@ -996,8 +996,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SILENCE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c5b40cda698a814449f7b1306dd953eb, type: 2}
+  m_sharedMaterial: {fileID: -6455579774424429959, guid: c5b40cda698a814449f7b1306dd953eb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

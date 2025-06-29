@@ -35,8 +35,9 @@ public class MonsterAI : BaseCharater
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttack = false;
-    private 
 
+
+    public event Action OnDeath;
     void Start()
     {
         Rigid2D = GetComponent<Rigidbody2D>();
@@ -178,4 +179,33 @@ public class MonsterAI : BaseCharater
 
     }
 
+    protected override void Die()
+    {
+        OnDeath?.Invoke();
+        base.Die();
+    }
+
+    public void ResetMonster()
+    {
+        isPlayerDetected = false;
+        isChasing = false;
+        isWaiting = false;
+        isAttack = false;
+
+        player = null;
+
+        // 필요한 경우 체력 초기화
+        base.HP = 1;
+        this.enabled = true;
+
+        // Rigidbody와 콜라이더가 꺼져 있었을 경우 대비
+        GetComponent<Rigidbody2D>().simulated = true;
+
+        var col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = true;
+
+        if (animator != null)
+            animator.Rebind();  // 애니메이터 초기화
+    }
 }

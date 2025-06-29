@@ -49,6 +49,7 @@ public class BaseCharater : MonoBehaviour
         //DropItem();
         // 3. 일정 시간 후 오브젝트 제거
         //Destroy(gameObject, 1.5f);
+        gameObject.SetActive(false);
     }
     public virtual void ChangeState(State newState)
     {

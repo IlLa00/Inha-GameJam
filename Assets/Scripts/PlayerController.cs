@@ -29,7 +29,7 @@ public class PlayerController : BaseCharater
 
     public event Action<int> UpdateHP;
     public event Action<Transform> GetPlayerTransform;
-
+    public event Action OpenGameOverPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -219,8 +219,13 @@ public class PlayerController : BaseCharater
 
     protected override void Die()
     {
-        this.gameObject.SetActive(false);
-        
         base.Die();
+        OpenGameOverPanel?.Invoke();
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+        UpdateHP?.Invoke(this.HP);
     }
 }

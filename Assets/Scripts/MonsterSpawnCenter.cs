@@ -23,11 +23,11 @@ public class MonsterSpawnCenter : MonoBehaviour
             GameObject monster = Instantiate(data.prefab, data.spawnPosition, Quaternion.identity);
             spawnedMonsters.Add(monster);
 
-            //MonsterAI m = monster.GetComponent<MonsterAI>();
-            //m.OnDeath += (dead) =>
-            //{
-            //    StartCoroutine(RespawnAfterDelay(data, monster));
-            //};
+            MonsterAI m = monster.GetComponent<MonsterAI>();
+            m.OnDeath += () =>
+            {
+                StartCoroutine(RespawnAfterDelay(data, monster));
+            };
         }
     }
 
@@ -38,6 +38,19 @@ public class MonsterSpawnCenter : MonoBehaviour
         // 다시 위치 초기화 및 활성화
         monsterObj.transform.position = data.spawnPosition;
         monsterObj.SetActive(true);
+
+        monsterObj.GetComponent<MonsterAI>()?.ResetMonster();
+        //var collider = monsterObj.GetComponent<Collider2D>();
+        //if (collider != null) collider.enabled = true;
+
+        //var monsterAI = monsterObj.GetComponent<MonsterAI>();
+        //if (monsterAI != null) monsterAI.enabled = true;
+        //monsterAI.HP = 1;
+        //monsterAI.enabled = true;
+
+        //monsterAI.ChangeState(0);
+        //var animator = monsterObj.GetComponent<Animator>();
+        //if (animator != null) animator.Rebind();
     }
     
 }

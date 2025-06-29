@@ -6,22 +6,31 @@ using UnityEngine.UI;
 public class GameOptionWindow : MonoBehaviour
 {
     [SerializeField]
-    private GameObject panel;
-
+    private GameObject optionPanel;
+    [SerializeField]
+    private GameObject GameOverPanel;
+    [SerializeField]
+    private PlayerController player;
     bool isSetActive = false;
     // Start is called before the first frame update
     void Start()
     {
-        panel.SetActive(isSetActive);
+        GameOverPanel.SetActive(false);
+        player.OpenGameOverPanel += OpenGameOverPanel;
+        optionPanel.SetActive(isSetActive);
     }
 
+    void OpenGameOverPanel()
+    {
+        GameOverPanel.SetActive(true);
+    }
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             isSetActive = isSetActive ? false : true;
-            panel.SetActive(isSetActive);        
+            optionPanel.SetActive(isSetActive);        
         }
 
     }

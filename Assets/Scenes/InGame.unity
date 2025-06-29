@@ -806,7 +806,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d428488b3d6882e418e778d49adeb40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 710039616}
+  optionPanel: {fileID: 710039616}
+  GameOverPanel: {fileID: 338089712}
+  player: {fileID: 953720614}
 --- !u!1 &312552964
 GameObject:
   m_ObjectHideFlags: 0
@@ -5233,7 +5235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1a0afbb385a244d912d6bd35bb846f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnList: []
+  spawnList:
+  - prefab: {fileID: 5357960223039841338, guid: 5f0658deec9d3604f8459fd6343b25dc, type: 3}
+    spawnPosition: {x: -15, y: 0, z: 0}
+    respawnDelay: 60
 --- !u!1 &1147359433
 GameObject:
   m_ObjectHideFlags: 0
@@ -6056,7 +6061,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -880, y: 329}
+  m_AnchoredPosition: {x: -878.3, y: 367.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1337055236
