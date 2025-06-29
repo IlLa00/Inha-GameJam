@@ -117,8 +117,8 @@ public class PlayerController : BaseCharater
         HandleInput();
 
         int key = 0;
-        if (Input.GetKey(KeyCode.RightArrow)) { key = 1; }
-        if (Input.GetKey(KeyCode.LeftArrow)) { key = -1; }
+        if (Input.GetKey(KeyCode.RightArrow) && !IsHide) { key = 1; }
+        if (Input.GetKey(KeyCode.LeftArrow) && !IsHide) { key = -1; }
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift); //달리는지 확인 후 현재 force를 계산함
         float currentForce = isRunning ? RunForce : WalkForce;
@@ -145,18 +145,23 @@ public class PlayerController : BaseCharater
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
+        if(!IsHide)
         {
-            this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
-            animator.ResetTrigger("Jump");
-            ChangeState(State.Jump);
+            if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
+            {
+                this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
+                animator.ResetTrigger("Jump");
+                ChangeState(State.Jump);
+
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                //플랫포머 내려오기?
+                ChangeState(State.Jump);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            //플랫포머 내려오기?
-            ChangeState(State.Jump);
-        }
-        else if (Input.GetKeyDown(KeyCode.F)) //상호작용
+        
+        if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
             Vector2 origin = Rigid2D.position + new Vector2(-3f, 0);
 
