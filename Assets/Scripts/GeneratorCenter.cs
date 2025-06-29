@@ -48,8 +48,10 @@ public class GeneratorCenter : MonoBehaviour
         int generator_Index = 0;
         if (collectedGenerators.Count == 0)
             return;
+        
         for (int i = 0; i < collectedGenerators.Count; i++)
         {
+            //Debug.Log(collectedGenerators[i].IsComplete());
             if (collectedGenerators[i].IsComplete())
             {
                 generatorCountImages[generator_Index].sprite = fullGenerator;
