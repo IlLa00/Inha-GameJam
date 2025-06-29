@@ -14,7 +14,7 @@ public class BaseCharater : MonoBehaviour
 
     protected Animator animator;
 
-    public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked,};
+    public enum State {Idle, Walk, Attack, Die, Run, Jump, land, Be_Attacked, Stun};
     protected State CurrentState;
 
 
@@ -49,6 +49,8 @@ public class BaseCharater : MonoBehaviour
 
     public virtual void ChangeState(State newState)
     {
+        CurrentState = newState;
+
         switch (newState)
         {
             case State.Idle:
@@ -62,6 +64,9 @@ public class BaseCharater : MonoBehaviour
                 break;
             case State.Attack:
                 animator.SetTrigger("Attack");
+                break;
+            case State.Stun:
+                animator.SetBool("Stun", true);
                 break;
         }
     }

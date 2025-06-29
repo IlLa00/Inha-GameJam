@@ -124,6 +124,11 @@ public class PlayerController : BaseCharater
         float currentForce = isRunning ? RunForce : WalkForce;
         float currentMaxSpeed = isRunning ? RunMaxSpeed : MaxSpeed;
 
+        if(isRunning)
+        {
+            CurrentNoiseLevel += 0.05f;
+        }
+
         this.Rigid2D.AddForce(transform.right * key * currentForce); // 좌우 움직임
         float velX = Mathf.Abs(this.Rigid2D.velocity.x);
 
@@ -147,6 +152,7 @@ public class PlayerController : BaseCharater
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) && IsGrounded()) //점프
         {
+            CurrentNoiseLevel += 5.0f;
             this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
             animator.ResetTrigger("Jump");
             ChangeState(State.Jump);
@@ -155,6 +161,7 @@ public class PlayerController : BaseCharater
         {
             //플랫포머 내려오기?
             ChangeState(State.Jump);
+            CurrentNoiseLevel += 5.0f;
         }
         else if (Input.GetKeyDown(KeyCode.F)) //상호작용
         {
@@ -174,6 +181,7 @@ public class PlayerController : BaseCharater
         }
         else if (Input.GetKeyDown(KeyCode.Z) && canAttack) //공격
         {
+            CurrentNoiseLevel += 30f;
             StartCoroutine(AttackRoutine());
             ChangeState(State.Attack);
             // 공격, 스턴건
@@ -183,7 +191,10 @@ public class PlayerController : BaseCharater
             if (inventory != null && inventory.IsInventoryEmpty())
                 PerformAttack();
             else
+            {
                 inventory.UseItem();
+            }
+                
         }
     }
     System.Collections.IEnumerator AttackRoutine()

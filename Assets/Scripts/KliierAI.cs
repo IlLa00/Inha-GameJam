@@ -16,6 +16,7 @@ public class KliierAI : BaseCharater
     private float yUpdateInterval = 2f;
     private float nextYUpdateTime = 0f;
     private float targetY;
+    private Rigidbody2D Rigid2D;
 
     public float attackrangeX = 1.0f;
     private Vector3 startPosition;
@@ -31,18 +32,20 @@ public class KliierAI : BaseCharater
         startPosition = transform.position;
         targetY = startPosition.y;
         nextYUpdateTime = Time.time + yUpdateInterval;
+        Rigid2D = GetComponent<Rigidbody2D>();
 
         startPosition = transform.position;
         base.Speed = 3f;
         base.Atk = 5;
         base.animator = GetComponent<Animator>();
         base.HP = 10;
-
-        base.TakeDamage(30);
     }
 
     void Update()
     {
+        if (base.CurrentState == State.Stun)
+            return;
+
         if (isNoiseEvent)
             Chase();
         else
@@ -65,6 +68,13 @@ public class KliierAI : BaseCharater
         player = NoisePos;
         isNoiseEvent = true;
     }
+    public override void TakeDamage(int damage)
+    {
+        ChangeState(State.Stun);
+        Rigid2D.velocity = Vector2.zero;
+        StartCoroutine(StunTIme());
+    }
+
 
     void DetectPlayer()
     {
@@ -98,6 +108,20 @@ public class KliierAI : BaseCharater
         isWaiting = false;
     }
 
+    System.Collections.IEnumerator StunTIme()
+    {
+        // 이동 차단 (선택사항: 공격 등도 막고 싶다면 상태체크)
+        float timer = 0f;
+        while (timer < 5f)
+        {
+            Rigid2D.velocity = Vector2.zero; // 지속적으로 멈추기
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        base.animator.SetBool("Stun", false);  // 스턴 애니메이션 종료
+        ChangeState(State.Idle);               // 기본 상태로 복귀
+    }
     void Patrol() //순찰
     {
         float direction = isMovingRight ? 1f : -1f;
