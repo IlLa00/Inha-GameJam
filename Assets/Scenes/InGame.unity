@@ -27318,7 +27318,7 @@ MonoBehaviour:
   HP: 10
   Speed: 0
   Atk: 0
-  findRange: 7
+  findRange: 12
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
