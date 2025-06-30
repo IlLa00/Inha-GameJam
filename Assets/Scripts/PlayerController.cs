@@ -35,8 +35,6 @@ public class PlayerController : BaseCharater
     private bool IsHide = false;
     private bool canAttack = true;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -184,13 +182,14 @@ public class PlayerController : BaseCharater
             // 공격, 스턴건
             // 만약 손에 스턴건이 있으면 스턴건 발사
             // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
-            
+
             if (inventory != null && inventory.IsInventoryEmpty())
                 PerformAttack();
             else
                 inventory.UseItem();
         }
     }
+
     System.Collections.IEnumerator AttackRoutine()
     {
         canAttack = false;
@@ -204,6 +203,7 @@ public class PlayerController : BaseCharater
 
         canAttack = true;
     }
+
     bool IsGrounded()
     {
         float rayOffsetY = -0.5f; // 필요에 따라 조정

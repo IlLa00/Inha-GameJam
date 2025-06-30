@@ -23238,6 +23238,10 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 953720614}
+    - target: {fileID: 3963057699431019950, guid: 52604f1814efc704bb476dd57cde55f8, type: 3}
+      propertyPath: generatorSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7e7b0c25fa3a1bf4aa9f5e3ba907f49d, type: 3}
     - target: {fileID: 6103034675437256170, guid: 52604f1814efc704bb476dd57cde55f8, type: 3}
       propertyPath: m_Name
       value: Generator (2)
@@ -27009,6 +27013,14 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 953720614}
+    - target: {fileID: -2373417133462933049, guid: a9329a7786bdbe540b0c9bfe7e937c72, type: 3}
+      propertyPath: HideOnSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1c396552ab4e5e842a24193d282cba8d, type: 3}
+    - target: {fileID: -2373417133462933049, guid: a9329a7786bdbe540b0c9bfe7e937c72, type: 3}
+      propertyPath: HideOffSound
+      value: 
+      objectReference: {fileID: 8300000, guid: de379f6a4924a86418145c13f9b2aa03, type: 3}
     - target: {fileID: 6303702496535789451, guid: a9329a7786bdbe540b0c9bfe7e937c72, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.06
@@ -27271,6 +27283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30bd1a0a604908b4e88208c45a70e119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundCenter: {fileID: 0}
 --- !u!4 &1638247580
 Transform:
   m_ObjectHideFlags: 0
