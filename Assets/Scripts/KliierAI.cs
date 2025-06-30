@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class KliierAI : BaseCharater
 {
     //chase speed 는 걍 바로 값을 넣어줬음
-    public float findRange = 7f;
+    public float findRange = 12f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
     public float waitBeforeChase = 1f;
@@ -26,7 +26,6 @@ public class KliierAI : BaseCharater
     private bool isWaiting = false;
     private bool isAttack = false;
     private bool isNoiseEvent = false;
-    private IHidable hidable;
 
     void Start()
     {
@@ -87,9 +86,6 @@ public class KliierAI : BaseCharater
 
         if (hit != null && hit.CompareTag("Player"))
         {
-            hidable = hit.GetComponent<IHidable>();
-            if (hidable.IsHidden() == true)
-                return;
 
             if (!isChasing && !isWaiting)
             {
@@ -153,13 +149,12 @@ public class KliierAI : BaseCharater
         if (Mathf.Abs(newPos.x - startPosition.x) > patrolXRange)
             isMovingRight = !isMovingRight;
 
-
         FlipSprite(direction);
     }
 
     void Chase()
     {
-        if (player == null || player)
+        if (player == null)
         {
             if (isNoiseEvent)
                 isNoiseEvent = false;

@@ -18,6 +18,13 @@ public class SoundCenter : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);  
+        if (FindObjectsOfType<SoundCenter>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();

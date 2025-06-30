@@ -653,6 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30bd1a0a604908b4e88208c45a70e119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundCenter: {fileID: 2113073874}
 --- !u!4 &1209415970
 Transform:
   m_ObjectHideFlags: 0
@@ -1312,7 +1313,7 @@ MonoBehaviour:
   - sceneName: Lobby
     bgmClip: {fileID: 8300000, guid: 40869972fba06ce44a1a024fdf908f9f, type: 3}
   - sceneName: InGame
-    bgmClip: {fileID: 8300000, guid: 40869972fba06ce44a1a024fdf908f9f, type: 3}
+    bgmClip: {fileID: 8300000, guid: ee403a3067a0c476dbd3e34a5f69c4a3, type: 3}
   volume: 0.5
 --- !u!4 &2113073875
 Transform:

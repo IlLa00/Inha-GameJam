@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class Generator : InteractiveObject
 {
+    [SerializeField] private AudioClip generatorSound;
+    private AudioSource audioSource;
+
     private float MaxProgress = 1f;
     private float CurrentProgress = 0f;
     private float SuccessProgress = 0.1f;
@@ -28,7 +31,9 @@ public class Generator : InteractiveObject
 
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     protected override void Update()
@@ -39,6 +44,11 @@ public class Generator : InteractiveObject
 
         if (CurrentProgress >= MaxProgress) // 맥스 게이지에 도달하면 완료 처리
         {
+            StopGeneratorSound();
+
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.white;
+
             IsCompleting = true;
             IsRepairing = false;
             return;
@@ -47,6 +57,8 @@ public class Generator : InteractiveObject
         if (!IsComplete() && IsRepairing && !IsPlayingGame && CurrentProgress < MaxProgress)
         {
             // Debug.Log("Generateor OnInteracting");
+
+            PlayGeneratorSound();
 
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.color = Color.red;
@@ -74,6 +86,8 @@ public class Generator : InteractiveObject
 
         if(!IsRepair())
         {
+            StopGeneratorSound();
+
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.color = Color.white;
         }
@@ -107,6 +121,24 @@ public class Generator : InteractiveObject
             Min_Range = Max_Range - 0.2f;
         }
        
+    }
+
+    public void PlayGeneratorSound()
+    {
+        if(!audioSource.isPlaying)
+        {
+            audioSource.clip = generatorSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+        
+    }
+
+    public void StopGeneratorSound()
+    {
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+
     }
 
     public void SuccessMiniGame()

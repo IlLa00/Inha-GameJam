@@ -7,11 +7,6 @@ using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UI.Image;
-
-public interface IHidable
-{
-    bool IsHidden();
-}
 public class PlayerController : BaseCharater
 {
     //[Serialized] private Inventory inventory;
@@ -42,8 +37,6 @@ public class PlayerController : BaseCharater
     {
         return IsHide;
     }
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -165,7 +158,6 @@ public class PlayerController : BaseCharater
                 this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
                 animator.ResetTrigger("Jump");
                 ChangeState(State.Jump);
-                IncreaseCurrentNoiseLevel(5f);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
@@ -205,6 +197,7 @@ public class PlayerController : BaseCharater
                 inventory.UseItem();
         }
     }
+
     System.Collections.IEnumerator AttackRoutine()
     {
         canAttack = false;
@@ -218,6 +211,7 @@ public class PlayerController : BaseCharater
 
         canAttack = true;
     }
+
     bool IsGrounded()
     {
         float rayOffsetY = -0.5f; // 필요에 따라 조정

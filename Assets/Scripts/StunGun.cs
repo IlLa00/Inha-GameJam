@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class StunGun : Item
 {
-    private Camera playerCamera;
     private float range = 100f;
     private float key = 1;
 
@@ -18,10 +17,6 @@ public class StunGun : Item
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = Itemicon;
         renderer.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-
-        playerCamera = Camera.main;
-        if (playerCamera == null)
-            playerCamera = FindObjectOfType<Camera>();
     }
 
     void Update()
