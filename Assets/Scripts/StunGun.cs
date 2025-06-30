@@ -3,9 +3,6 @@ using UnityEngine.UI;
 
 public class StunGun : Item
 {
-    private AudioClip FireSound;
-    private AudioSource audioSource;
-
     private float range = 100f;
     private float key = 1;
 
@@ -13,11 +10,6 @@ public class StunGun : Item
     {
         Initialize("Stun Gun", Resources.Load<Sprite>("StunGun"));
 
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
-
-        FireSound = Resources.Load<AudioClip>("StunGunSound");
     }
 
     void Start()
@@ -25,7 +17,6 @@ public class StunGun : Item
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = Itemicon;
         renderer.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
-       
     }
 
     void Update()
@@ -40,8 +31,6 @@ public class StunGun : Item
 
     private void FireStunGun()
     {
-        PlayFireSound();
-
         Vector2 rayOrigin = Owner.gameObject.transform.position;
         Vector2 rayDirection = new Vector2(Owner.gameObject.transform.localScale.x > 0 ? key : -key, 0);
 
@@ -68,29 +57,6 @@ public class StunGun : Item
         {
             Debug.Log("스턴건이 아무것도 못 맞춤");
         }
-    }
-
-    public void PlayFireSound()
-    {
-        Debug.Log("!");
-
-        if (audioSource == null)
-            return;
-
-        Debug.Log("!!");
-
-        if (FireSound == null)
-            return;
-
-        Debug.Log("!!!");
-
-        if (!audioSource.isPlaying)
-        {
-            Debug.Log("!!!!");
-            audioSource.clip = FireSound;
-            audioSource.Play();
-        }
-
     }
 }
 
