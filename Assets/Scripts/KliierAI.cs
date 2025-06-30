@@ -6,13 +6,13 @@ using UnityEngine.UIElements;
 
 public class KliierAI : BaseCharater
 {
-    public float patrolRange = 10f; // 맵 범위 만큼 순찰
-    public float findRange = 5f;
+    //chase speed 는 걍 바로 값을 넣어줬음
+    public float findRange = 7f;
     private Transform player;
     [SerializeField] private LayerMask playerLayer;
-    public float chaseSpeed = 4.0f;
     public float waitBeforeChase = 1f;
-    private float patrolYRange = 20.5f;
+    private float patrolYRange = 50f;
+    private float patrolXRange = 110f;
     private float yUpdateInterval = 2f;
     private float nextYUpdateTime = 0f;
     private float targetY;
@@ -26,6 +26,7 @@ public class KliierAI : BaseCharater
     private bool isWaiting = false;
     private bool isAttack = false;
     private bool isNoiseEvent = false;
+    private IHidable hidable;
 
     void Start()
     {
@@ -36,7 +37,7 @@ public class KliierAI : BaseCharater
 
         startPosition = transform.position;
         base.Speed = 3f;
-        base.Atk = 5;
+        base.Atk = 2;
         base.animator = GetComponent<Animator>();
         base.HP = 10;
     }
@@ -47,7 +48,11 @@ public class KliierAI : BaseCharater
             return;
 
         if (isNoiseEvent)
+        {
             Chase();
+            if (!isAttack)
+                StartCoroutine(AttackPlayer());
+        }
         else
         {
             DetectPlayer();
@@ -82,6 +87,10 @@ public class KliierAI : BaseCharater
 
         if (hit != null && hit.CompareTag("Player"))
         {
+            hidable = hit.GetComponent<IHidable>();
+            if (hidable.IsHidden() == true)
+                return;
+
             if (!isChasing && !isWaiting)
             {
                 isWaiting = true;
@@ -121,6 +130,9 @@ public class KliierAI : BaseCharater
 
         base.animator.SetBool("Stun", false);  // 스턴 애니메이션 종료
         ChangeState(State.Idle);               // 기본 상태로 복귀
+        isNoiseEvent = false;
+        isChasing = false;
+        player = null;
     }
     void Patrol() //순찰
     {
@@ -130,7 +142,7 @@ public class KliierAI : BaseCharater
         // Y 고정
         if (Time.time >= nextYUpdateTime)
         {
-            targetY = startPosition.y + Random.Range(-patrolYRange, patrolYRange);
+            targetY = startPosition.y + Random.Range(0, patrolYRange);
             nextYUpdateTime = Time.time + yUpdateInterval;
         }
 
@@ -138,32 +150,33 @@ public class KliierAI : BaseCharater
         newPos.y = Mathf.Lerp(transform.position.y, targetY, 2f * Time.deltaTime);
         transform.position = newPos;
 
-        if (Mathf.Abs(newPos.x - startPosition.x) > patrolRange)
+        if (Mathf.Abs(newPos.x - startPosition.x) > patrolXRange)
             isMovingRight = !isMovingRight;
+
 
         FlipSprite(direction);
     }
 
     void Chase()
     {
-        if (player == null) return;
+        if (player == null || player)
+        {
+            if (isNoiseEvent)
+                isNoiseEvent = false;
+
+            return;
+        }
 
         if (isNoiseEvent) // 노이즈 이벤트, 즉 소음게이지가 100일 때 발생.
         {
-            if (Vector3.Distance(transform.position, player.position) < 10f)
-            {
-                isNoiseEvent = false;
-                return;
-            }
-
-            transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, player.position, 10 * Time.deltaTime);
             float direction = player.position.x - transform.position.x;
             FlipSprite(direction);
         }
         else
         {
             Vector3 targetPos = player.position;
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, 10 * Time.deltaTime);
             float direction = targetPos.x - transform.position.x;
             FlipSprite(direction);
         }

@@ -8,6 +8,10 @@ using UnityEngine.SocialPlatforms.GameCenter;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UI.Image;
 
+public interface IHidable
+{
+    bool IsHidden();
+}
 public class PlayerController : BaseCharater
 {
     //[Serialized] private Inventory inventory;
@@ -34,6 +38,10 @@ public class PlayerController : BaseCharater
 
     private bool IsHide = false;
     private bool canAttack = true;
+    public bool IsHidden()
+    {
+        return IsHide;
+    }
 
 
 
@@ -124,6 +132,11 @@ public class PlayerController : BaseCharater
         float currentForce = isRunning ? RunForce : WalkForce;
         float currentMaxSpeed = isRunning ? RunMaxSpeed : MaxSpeed;
 
+        if(isRunning)
+        {
+            IncreaseCurrentNoiseLevel(0.05f);
+        }
+
         this.Rigid2D.AddForce(transform.right * key * currentForce); // 좌우 움직임
         float velX = Mathf.Abs(this.Rigid2D.velocity.x);
 
@@ -152,7 +165,7 @@ public class PlayerController : BaseCharater
                 this.Rigid2D.AddForce(Vector2.up * this.JumpForce, ForceMode2D.Impulse);
                 animator.ResetTrigger("Jump");
                 ChangeState(State.Jump);
-
+                IncreaseCurrentNoiseLevel(5f);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
@@ -181,10 +194,11 @@ public class PlayerController : BaseCharater
         {
             StartCoroutine(AttackRoutine());
             ChangeState(State.Attack);
+            IncreaseCurrentNoiseLevel(10.0f);
             // 공격, 스턴건
             // 만약 손에 스턴건이 있으면 스턴건 발사
             // 아무것도 없으면 일반 공격 but 살인마한텐 피해가 안 감
-            
+
             if (inventory != null && inventory.IsInventoryEmpty())
                 PerformAttack();
             else
@@ -264,6 +278,7 @@ public class PlayerController : BaseCharater
         Renderer playerRenderer = GetComponent<Renderer>();
         if (playerRenderer != null)
             playerRenderer.enabled = false; // 렌더링만 끔
+
     }
 
     public void OffHide()
@@ -273,5 +288,11 @@ public class PlayerController : BaseCharater
         Renderer playerRenderer = GetComponent<Renderer>();
         if (playerRenderer != null)
             playerRenderer.enabled = true;
+
+    }
+
+    public bool GetHide()
+    {
+        return IsHide;
     }
 }
