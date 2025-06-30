@@ -103,6 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionRange: 3
   Player: {fileID: 0}
+  generatorSound: {fileID: 8300000, guid: 7e7b0c25fa3a1bf4aa9f5e3ba907f49d, type: 3}
 --- !u!114 &2646602747780756754
 MonoBehaviour:
   m_ObjectHideFlags: 0

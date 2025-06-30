@@ -114,3 +114,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionRange: 3
   Player: {fileID: 0}
+  HideOnSound: {fileID: 8300000, guid: 1c396552ab4e5e842a24193d282cba8d, type: 3}
+  HideOffSound: {fileID: 8300000, guid: 1c396552ab4e5e842a24193d282cba8d, type: 3}

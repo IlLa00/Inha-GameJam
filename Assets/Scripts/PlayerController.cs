@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UI.Image;
 public class PlayerController : BaseCharater
