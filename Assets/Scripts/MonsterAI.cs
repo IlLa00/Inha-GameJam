@@ -25,7 +25,7 @@ public class MonsterAI : BaseCharater
     [SerializeField] private float RunSpeed = 2f;
     [SerializeField] private float attackrangeX = 1.0f;
     [SerializeField] private Transform attakOrigin;
-    [SerializeField] private Vector2 boxsize = new Vector2(0.8f, 1f);
+    [SerializeField] private Vector2 boxsize = new Vector2(0.4f, 0.6f);
     [SerializeField] private LayerMask Player;
 
     private Transform player;
@@ -42,7 +42,7 @@ public class MonsterAI : BaseCharater
         base.animator = GetComponent<Animator>();
         base.Speed = 2f;
         base.HP = 1;
-        base.Atk = 2;
+        base.Atk = 1;
     }
 
     // Update is called once per frame
